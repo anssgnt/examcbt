@@ -997,15 +997,22 @@ function renderAdminHasilPage(page) {
   const search = document.getElementById('admin-hasil-search')?.value?.toLowerCase() || '';
   const filtered = data.filter(h => h.nama.toLowerCase().includes(search) || h.ujian.toLowerCase().includes(search));
   const sliced = filtered.slice((page - 1) * perPage, page * perPage);
-  tbHasil.innerHTML = sliced.map(h => `<tr>
+  tbHasil.innerHTML = sliced.map(h => {
+    const skor = h.skor ?? 0;
+    const skorDisplay = skor === 0 ? '<span style="color:#ef4444;font-weight:bold;">0 ⚠️</span>' : `<strong>${skor}</strong>`;
+    const statusClass = skor === 0 ? 'style="background-color:#fee2e2;"' : '';
+    const reGradeBtn = skor === 0 ? `<button class="btn btn-outline" style="padding:4px 8px;font-size:0.7rem;color:#f59e0b;border-color:#fcd34d;margin-right:4px;" onclick="reGradeStudent('${h.examId || h.ujian || ''}','${h.userId || ''}','${(h.nama || '').replace(/'/g, "\\'")}')">🔄 Re-grade</button>` : '';
+    return `<tr ${statusClass}>
     <td>${h.waktu || '-'}</td>
     <td>${h.nama || '-'}</td>
     <td>${h.ujian || '-'}</td>
-    <td><strong>${h.skor ?? 0}</strong></td>
+    <td>${skorDisplay}</td>
     <td>
+      ${reGradeBtn}
       <button class="btn btn-outline" style="padding:4px 8px;font-size:0.7rem;color:var(--danger);border-color:#FECACA;" onclick="deleteHasilRecord('${h.examId || h.ujian || ''}','${h.userId || ''}','${(h.nama || '').replace(/'/g, "\\'")}')">🗑️ Hapus</button>
     </td>
-  </tr>`).join('');
+  </tr>`;
+  }).join('');
   renderPaginationControls('admin-hasil-pagination', filtered.length, perPage, page, 'renderAdminHasilPage');
 }
 
@@ -1263,6 +1270,41 @@ window.deleteHasilRecord = async function (examId, userId, nama = '') {
     await loadAdminHasil(true);
   } catch (e) {
     showCustomAlert('Gagal', 'Gagal menghapus hasil: ' + e.message, '❌');
+  } finally {
+    if (window.dbDisconnect) window.dbDisconnect();
+    hideLoading();
+  }
+};
+
+window.reGradeStudent = async function (examId, userId, nama = '') {
+  if (!examId || !userId) {
+    showCustomAlert('Gagal', 'Data hasil tidak valid.', '❌');
+    return;
+  }
+  const label = nama ? ` milik ${nama}` : '';
+  if (!confirm(`Re-grade hasil ujian${label}? Skor akan dihitung ulang dari jawaban.`)) return;
+  showLoading('Re-grading...');
+  try {
+    if (window.dbConnectFast) await window.dbConnectFast();
+    const resultId = `${examId}_${userId}`;
+    const snap = await db.ref(`/hasil/${resultId}`).once('value');
+    const hasil = snap.val();
+    if (!hasil) throw new Error('Hasil tidak ditemukan');
+    
+    const detail = typeof hasil.detail === 'string' ? JSON.parse(hasil.detail) : hasil.detail || {};
+    const entries = Object.values(detail).filter(e => e && typeof e === 'object');
+    const correctCount = entries.filter(e => e.correct === true).length;
+    const totalCount = entries.length;
+    
+    if (totalCount === 0) throw new Error('Tidak ada jawaban untuk di-grade');
+    
+    const newSkor = Math.round((correctCount / totalCount) * 100);
+    await db.ref(`/hasil/${resultId}/skor`).set(newSkor);
+    
+    showCustomAlert('Berhasil', `Skor diperbarui: ${newSkor}% (${correctCount}/${totalCount} benar)`, '✅');
+    await loadAdminHasil(true);
+  } catch (e) {
+    showCustomAlert('Gagal', 'Gagal re-grade: ' + e.message, '❌');
   } finally {
     if (window.dbDisconnect) window.dbDisconnect();
     hideLoading();
