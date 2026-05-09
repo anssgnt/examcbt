@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Scroller Testing</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #F8FAFC;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .header h1 {
+      margin-bottom: 10px;
+      color: #1E293B;
+    }
+
+    .header p {
+      color: #64748B;
+      font-size: 0.9rem;
+    }
+
+    .controls {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .control-group label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #475569;
+    }
+
+    .control-group input,
+    .control-group select {
+      padding: 8px 12px;
+      border: 1px solid #E2E8F0;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    .control-group button {
+      padding: 8px 16px;
+      background: #3B82F6;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .control-group button:hover {
+      background: #2563EB;
+    }
+
+    .metrics {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .metric-card {
+      background: #F1F5F9;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #3B82F6;
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: #64748B;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1E293B;
+    }
+
+    .scroller-container {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      height: 600px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .scroller-header {
+      padding: 15px 20px;
+      background: #F8FAFC;
+      border-bottom: 1px solid #E2E8F0;
+      display: flex;
+      gap: 15px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: #475569;
+    }
+
+    .scroller-header > div:nth-child(1) { flex: 0 0 50px; }
+    .scroller-header > div:nth-child(2) { flex: 1; }
+    .scroller-header > div:nth-child(3) { flex: 0 0 100px; }
+    .scroller-header > div:nth-child(4) { flex: 0 0 100px; }
+    .scroller-header > div:nth-child(5) { flex: 0 0 80px; }
+
+    #virtual-scroller {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .virtual-scroller-viewport {
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .virtual-scroller-row {
+      display: flex;
+      gap: 15px;
+      padding: 0 20px;
+      align-items: center;
+      border-bottom: 1px solid #E2E8F0;
+      font-size: 0.9rem;
+    }
+
+    .virtual-scroller-row:hover {
+      background: #F8FAFC;
+    }
+
+    .virtual-scroller-row > div:nth-child(1) { flex: 0 0 50px; color: #94A3B8; }
+    .virtual-scroller-row > div:nth-child(2) { flex: 1; }
+    .virtual-scroller-row > div:nth-child(3) { flex: 0 0 100px; }
+    .virtual-scroller-row > div:nth-child(4) { flex: 0 0 100px; }
+    .virtual-scroller-row > div:nth-child(5) { flex: 0 0 80px; }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-active {
+      background: #DCFCE7;
+      color: #166534;
+    }
+
+    .status-inactive {
+      background: #FEE2E2;
+      color: #991B1B;
+    }
+
+    .status-pending {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+
+    .test-results {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .test-results h3 {
+      margin-bottom: 15px;
+      color: #1E293B;
+    }
+
+    .test-item {
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+    }
+
+    .test-item.pass {
+      background: #DCFCE7;
+      color: #166534;
+    }
+
+    .test-item.fail {
+      background: #FEE2E2;
+      color: #991B1B;
+    }
+
+    .test-item.pending {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+
+    .test-icon {
+      font-size: 1.2rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: #E2E8F0;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #3B82F6;
+      transition: width 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>🚀 Virtual Scroller Performance Testing</h1>
+      <p>Test virtual scrolling dengan 900+ rows untuk admin monitoring</p>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div class="control-group">
+        <label>Jumlah Rows</label>
+        <input type="number" id="rowCount" value="900" min="10" max="5000">
+      </div>
+      <div class="control-group">
+        <label>Row Height (px)</label>
+        <input type="number" id="rowHeight" value="60" min="30" max="200">
+      </div>
+      <div class="control-group">
+        <label>Buffer Size</label>
+        <input type="number" id="bufferSize" value="5" min="1" max="20">
+      </div>
+      <div class="control-group">
+        <label>Overscan</label>
+        <input type="number" id="overscan" value="3" min="0" max="10">
+      </div>
+      <div class="control-group">
+        <button onclick="initializeTest()">Initialize Test</button>
+      </div>
+      <div class="control-group">
+        <button onclick="runPerformanceTest()" style="background: #10B981;">Run Performance Test</button>
+      </div>
+      <div class="control-group">
+        <button onclick="runSortTest()" style="background: #F59E0B;">Test Sort</button>
+      </div>
+      <div class="control-group">
+        <button onclick="runFilterTest()" style="background: #8B5CF6;">Test Filter</button>
+      </div>
+    </div>
+
+    <!-- Metrics -->
+    <div class="metrics" id="metrics">
+      <div class="metric-card">
+        <div class="metric-label">Total Items</div>
+        <div class="metric-value" id="metric-total">0</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">DOM Nodes</div>
+        <div class="metric-value" id="metric-dom">0</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">DOM Reduction</div>
+        <div class="metric-value" id="metric-reduction">0%</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Render Time</div>
+        <div class="metric-value" id="metric-render">0ms</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Scroll Events</div>
+        <div class="metric-value" id="metric-scroll">0</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Memory (MB)</div>
+        <div class="metric-value" id="metric-memory">0</div>
+      </div>
+    </div>
+
+    <!-- Virtual Scroller -->
+    <div class="scroller-container">
+      <div class="scroller-header">
+        <div>#</div>
+        <div>Nama Siswa</div>
+        <div>Kelas</div>
+        <div>Status</div>
+        <div>Nilai</div>
+      </div>
+      <div id="virtual-scroller"></div>
+    </div>
+
+    <!-- Test Results -->
+    <div class="test-results">
+      <h3>📊 Test Results</h3>
+      <div id="test-results"></div>
+    </div>
+  </div>
+
+  <script src="modules/virtual-scroller.js"></script>
+  <script>
+    let scroller = null;
+    let testData = [];
+    const testResults = [];
+
+    // Generate test data
+    function generateTestData(count) {
+      const statuses = ['SELESAI', 'MENGERJAKAN', 'BELUM'];
+      const classes = ['X-A', 'X-B', 'X-C', 'XI-A', 'XI-B', 'XI-C', 'XII-A', 'XII-B', 'XII-C'];
+      const names = ['Ahmad', 'Budi', 'Citra', 'Dina', 'Eka', 'Fajar', 'Gita', 'Hendra', 'Ika', 'Joko'];
+
+      testData = [];
+      for (let i = 0; i < count; i++) {
+        testData.push({
+          id: i + 1,
+          nama: `${names[i % names.length]} ${Math.floor(i / names.length) + 1}`,
+          kelas: classes[i % classes.length],
+          status: statuses[i % statuses.length],
+          nilai: Math.floor(Math.random() * 100)
+        });
+      }
+      return testData;
+    }
+
+    // Render row function
+    function renderRow(item, index) {
+      const statusClass = item.status === 'SELESAI' ? 'status-active' : 
+                         item.status === 'MENGERJAKAN' ? 'status-pending' : 'status-inactive';
+      
+      return `
+        <div>
+          <div>${index + 1}</div>
+          <div>${item.nama}</div>
+          <div>${item.kelas}</div>
+          <div><span class="status-badge ${statusClass}">${item.status}</span></div>
+          <div>${item.nilai}</div>
+        </div>
+      `;
+    }
+
+    // Initialize test
+    function initializeTest() {
+      const rowCount = parseInt(document.getElementById('rowCount').value);
+      const rowHeight = parseInt(document.getElementById('rowHeight').value);
+      const bufferSize = parseInt(document.getElementById('bufferSize').value);
+      const overscan = parseInt(document.getElementById('overscan').value);
+
+      // Generate data
+      generateTestData(rowCount);
+
+      // Destroy existing scroller
+      if (scroller) {
+        scroller.destroy();
+      }
+
+      // Create new scroller
+      scroller = new VirtualScroller(
+        document.getElementById('virtual-scroller'),
+        testData,
+        rowHeight,
+        {
+          bufferSize,
+          overscan,
+          enableDebug: true,
+          renderRow: renderRow
+        }
+      );
+
+      updateMetrics();
+      addTestResult('Initialization', 'pass', 'Virtual scroller initialized successfully');
+    }
+
+    // Update metrics
+    function updateMetrics() {
+      if (!scroller) return;
+
+      const metrics = scroller.getMetrics();
+      document.getElementById('metric-total').textContent = metrics.itemsCount;
+      document.getElementById('metric-dom').textContent = metrics.domNodesCount;
+      document.getElementById('metric-reduction').textContent = metrics.domReduction;
+      document.getElementById('metric-render').textContent = metrics.renderTime.toFixed(2) + 'ms';
+      document.getElementById('metric-scroll').textContent = metrics.scrollEvents;
+
+      // Memory usage (approximate)
+      if (performance.memory) {
+        const memoryMB = (performance.memory.usedJSHeapSize / 1048576).toFixed(2);
+        document.getElementById('metric-memory').textContent = memoryMB;
+      }
+    }
+
+    // Run performance test
+    async function runPerformanceTest() {
+      if (!scroller) {
+        addTestResult('Performance Test', 'fail', 'Scroller not initialized');
+        return;
+      }
+
+      const startTime = performance.now();
+      const startMemory = performance.memory?.usedJSHeapSize || 0;
+
+      // Scroll to bottom
+      scroller.viewport.scrollTop = scroller.content.scrollHeight;
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Scroll to top
+      scroller.viewport.scrollTop = 0;
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Scroll to middle
+      scroller.viewport.scrollTop = scroller.content.scrollHeight / 2;
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      const endTime = performance.now();
+      const endMemory = performance.memory?.usedJSHeapSize || 0;
+      const duration = endTime - startTime;
+      const memoryDelta = (endMemory - startMemory) / 1048576;
+
+      updateMetrics();
+
+      const metrics = scroller.getMetrics();
+      const domReduction = parseFloat(metrics.domReduction);
+      const renderTime = metrics.renderTime;
+
+      // Check targets
+      const domReductionPass = domReduction >= 94;
+      const renderTimePass = renderTime < 16.67; // 60fps = 16.67ms per frame
+      const memoryStable = Math.abs(memoryDelta) < 5; // Less than 5MB change
+
+      addTestResult('DOM Reduction (94%+)', domReductionPass ? 'pass' : 'fail', 
+        `${domReduction}% reduction (${metrics.domNodesCount}/${metrics.itemsCount} nodes)`);
+      addTestResult('Render Performance (60fps)', renderTimePass ? 'pass' : 'fail', 
+        `${renderTime.toFixed(2)}ms per frame`);
+      addTestResult('Memory Stability', memoryStable ? 'pass' : 'fail', 
+        `Memory delta: ${memoryDelta.toFixed(2)}MB`);
+      addTestResult('Total Test Duration', 'pass', `${duration.toFixed(2)}ms`);
+    }
+
+    // Run sort test
+    function runSortTest() {
+      if (!scroller) {
+        addTestResult('Sort Test', 'fail', 'Scroller not initialized');
+        return;
+      }
+
+      const startTime = performance.now();
+
+      // Sort by nama
+      scroller.sort('nama', 'asc');
+      const sortTime = performance.now() - startTime;
+
+      updateMetrics();
+      addTestResult('Sort Performance', sortTime < 100 ? 'pass' : 'fail', 
+        `Sorted by nama in ${sortTime.toFixed(2)}ms`);
+    }
+
+    // Run filter test
+    function runFilterTest() {
+      if (!scroller) {
+        addTestResult('Filter Test', 'fail', 'Scroller not initialized');
+        return;
+      }
+
+      const startTime = performance.now();
+
+      // Filter by status
+      scroller.filter(item => item.status === 'SELESAI');
+      const filterTime = performance.now() - startTime;
+
+      updateMetrics();
+      addTestResult('Filter Performance', filterTime < 100 ? 'pass' : 'fail', 
+        `Filtered in ${filterTime.toFixed(2)}ms`);
+
+      // Clear filter
+      scroller.clearFilter();
+    }
+
+    // Add test result
+    function addTestResult(name, status, message) {
+      const resultsDiv = document.getElementById('test-results');
+      const resultItem = document.createElement('div');
+      resultItem.className = `test-item ${status}`;
+      resultItem.innerHTML = `
+        <span class="test-icon">${status === 'pass' ? '✓' : status === 'fail' ? '✗' : '⏳'}</span>
+        <div>
+          <strong>${name}</strong><br>
+          <small>${message}</small>
+        </div>
+      `;
+      resultsDiv.appendChild(resultItem);
+    }
+
+    // Initialize on load
+    window.addEventListener('load', () => {
+      initializeTest();
+    });
+  </script>
+</body>
+</html>

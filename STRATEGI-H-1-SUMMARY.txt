@@ -1,0 +1,170 @@
+═══════════════════════════════════════════════════════════════
+  🎯 STRATEGI H-1 SYNC - SOLUSI TERBAIK UNTUK 900 SISWA
+═══════════════════════════════════════════════════════════════
+
+✅ REKOMENDASI: Siswa sync H-1, hari H tinggal token!
+
+═══════════════════════════════════════════════════════════════
+📅 TIMELINE
+═══════════════════════════════════════════════════════════════
+
+H-1 SORE/MALAM (16:00-22:00):
+├─ Siswa login dari rumah
+├─ Siswa sync soal (tersebar 6 jam)
+├─ Load server: 3-5 req/s (SANGAT RINGAN)
+├─ Siswa JANGAN logout
+└─ Siswa tutup browser (boleh)
+
+HARI H PAGI (07:00-07:30):
+├─ Siswa buka aplikasi
+├─ Otomatis login (nama tersimpan)
+├─ Badge: "✅ Cache Ready"
+├─ Tombol: "▶ Mulai Ujian" (hijau)
+└─ Siap terima token
+
+HARI H UJIAN (07:30):
+├─ Pengawas bagikan token
+├─ Siswa input token
+├─ Langsung kerjakan (tidak download)
+└─ Load server: ~10 req/s (SUSTAINABLE)
+
+═══════════════════════════════════════════════════════════════
+✅ KEUNTUNGAN
+═══════════════════════════════════════════════════════════════
+
+UNTUK SISWA:
+✅ Hari H tidak perlu download (hemat waktu)
+✅ Tidak perlu internet saat ujian (offline mode)
+✅ Tidak ada antrian sync
+✅ Tinggal login → token → kerjakan
+
+UNTUK SEKOLAH:
+✅ Load server tersebar (tidak menumpuk)
+✅ Tidak ada bottleneck hari H
+✅ Bisa handle 900+ siswa tanpa masalah
+✅ Ujian lebih lancar dan cepat
+✅ GRATIS (free tier cukup)
+
+═══════════════════════════════════════════════════════════════
+🔒 KEAMANAN CACHE & SESSION
+═══════════════════════════════════════════════════════════════
+
+CACHE SOAL:
+✅ Tersimpan di IndexedDB (persistent)
+✅ Tersimpan di localStorage (backup)
+✅ Tidak hilang saat tutup browser
+✅ Tidak hilang saat restart device
+✅ Hanya hilang jika clear cache browser
+
+SESSION LOGIN:
+✅ Tersimpan di localStorage (CBT_LOGGED_USER)
+✅ Auto-restore saat buka aplikasi lagi
+✅ Nama dan kelas tetap tersimpan
+✅ Tidak perlu login ulang hari H
+
+INDICATOR VISUAL:
+✅ Badge "✅ Cache Ready" (jika sync >1 jam lalu)
+✅ Tombol "▶ Mulai Ujian" (hijau)
+✅ Pesan sukses: "Cache tersimpan! Besok tinggal token"
+
+═══════════════════════════════════════════════════════════════
+⚠️ YANG TIDAK BOLEH DILAKUKAN
+═══════════════════════════════════════════════════════════════
+
+SETELAH SYNC H-1:
+❌ JANGAN LOGOUT (session hilang)
+❌ JANGAN CLEAR CACHE browser (soal hilang)
+❌ JANGAN UNINSTALL aplikasi (data hilang)
+❌ JANGAN GANTI BROWSER (cache tidak pindah)
+❌ JANGAN GANTI DEVICE (cache tidak pindah)
+
+YANG BOLEH:
+✅ Tutup browser (boleh)
+✅ Matikan device (boleh)
+✅ Buka aplikasi lain (boleh)
+✅ Restart device (boleh)
+
+═══════════════════════════════════════════════════════════════
+📊 PERBANDINGAN STRATEGI
+═══════════════════════════════════════════════════════════════
+
+STRATEGI 1: Sync Hari H (30 menit sebelum)
+├─ Load: 7.5 req/s (2 menit spread)
+├─ Siswa antri 0-120 detik
+├─ Risiko: Bottleneck jika banyak yang telat
+└─ Status: ⚠️ Bisa, tapi risky
+
+STRATEGI 2: Sync H-1 (RECOMMENDED)
+├─ Load: 3-5 req/s (6 jam spread)
+├─ Siswa tidak antri (tersebar natural)
+├─ Hari H: Tinggal token (cepat)
+└─ Status: ✅ OPTIMAL
+
+═══════════════════════════════════════════════════════════════
+🎯 INSTRUKSI SINGKAT
+═══════════════════════════════════════════════════════════════
+
+UNTUK SISWA:
+
+H-1:
+1. Login dengan nama
+2. Klik "🔄 Sinkronisasi"
+3. Tunggu "✅ Berhasil"
+4. JANGAN logout
+5. Tutup browser (boleh)
+
+HARI H:
+1. Buka aplikasi (auto-login)
+2. Cek badge "✅ Cache Ready"
+3. Klik "▶ Mulai Ujian"
+4. Input token
+5. Kerjakan
+
+UNTUK PENGAWAS:
+
+H-1:
+1. Umumkan ke siswa: "Sync hari ini"
+2. Kirim link aplikasi
+3. Pantau progress (opsional)
+
+HARI H:
+1. Cek siswa yang belum sync
+2. Bagikan token
+3. Monitor ujian
+
+═══════════════════════════════════════════════════════════════
+🔧 TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════
+
+"Cache hilang hari H"
+→ Penyebab: Clear cache/incognito/ganti browser
+→ Solusi: Sync ulang (cepat, load server rendah)
+
+"Lupa logout H-1"
+→ Solusi: Klik "Keluar" → Login siswa baru → Sync ulang
+
+"Tombol masih 'Sinkronisasi' hari H"
+→ Penyebab: Cache hilang/versi soal berubah
+→ Solusi: Sync ulang (cepat)
+
+═══════════════════════════════════════════════════════════════
+✅ KESIMPULAN
+═══════════════════════════════════════════════════════════════
+
+STRATEGI H-1 SYNC = SOLUSI TERBAIK!
+
+✅ Load server tersebar (tidak menumpuk)
+✅ Hari H tinggal token (cepat)
+✅ Bisa handle 900+ siswa
+✅ GRATIS (free tier cukup)
+✅ Ujian lebih lancar
+
+SYARAT:
+⚠️ Siswa JANGAN logout setelah sync
+⚠️ Siswa JANGAN clear cache browser
+⚠️ Gunakan browser yang sama hari H
+
+═══════════════════════════════════════════════════════════════
+
+Generated: 8 Mei 2026
+Version: 1.0 (H-1 Sync Strategy)

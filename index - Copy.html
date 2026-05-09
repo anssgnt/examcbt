@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#F59E0B">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>CBT Online</title>
+
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css?v=2">
+
+  <link id="pwa-manifest" rel="manifest" href="">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --primary-light: #818cf8;
+      --secondary: #f59e0b;
+      --accent: #10b981;
+      --bg-glass: rgba(255, 255, 255, 0.85);
+      --bg-glass-dark: rgba(255, 255, 255, 0.15);
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --text-white: #ffffff;
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --radius-sm: 12px;
+      --radius-md: 20px;
+      --radius-lg: 30px;
+      --font-main: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+      -webkit-tap-highlight-color: transparent; 
+    }
+
+    html, body {
+      min-height: 100vh;
+      font-family: var(--font-main);
+      color: var(--text-main);
+      background-color: #f8fafc;
+      overflow-x: hidden;
+    }
+
+    body {
+      background: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(245, 158, 11, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(99, 102, 241, 0.1) 0px, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    /* ══════ APP CONTAINER ══════ */
+    .app-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+      background: transparent;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    /* ══════ HEADER ══════ */
+    .mobile-header {
+      padding: max(16px, env(safe-area-inset-top)) 20px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: all 0.3s ease;
+    }
+
+    .mobile-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: var(--shadow-md);
+    }
+
+    .mobile-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mobile-logo {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+
+    .mobile-logo i {
+      font-size: 20px;
+      color: white;
+    }
+
+    .mobile-school-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+
+    .mobile-school-sub {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .mobile-header-clock {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      background: rgba(99, 102, 241, 0.1);
+      padding: 6px 12px;
+      border-radius: 30px;
+      font-variant-numeric: tabular-nums;
+      border: 1px solid rgba(99, 102, 241, 0.1);
+    }
+
+    /* ══════ CONTENT ══════ */
+    .mobile-content {
+      padding: 0 20px 40px;
+      flex: 1;
+    }
+
+    /* ══════ STATUS BAR ══════ */
+    .mobile-status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: var(--radius-sm);
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .mobile-status-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .mobile-status-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      position: relative;
+    }
+
+    .mobile-status-dot.ready { 
+      background: var(--accent); 
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    .mobile-status-user {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mobile-status-user-placeholder {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .mobile-sync-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 30px;
+      background: white;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid #f1f5f9;
+    }
+
+    .mobile-sync-badge:active { transform: scale(0.95); }
+
+    .mobile-sync-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--secondary);
+    }
+
+    .mobile-sync-dot.ready { background: var(--accent); }
+
+    .mobile-sync-text {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    /* ══════ PROFILE SECTION ══════ */
+    .mobile-profile-section {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border-radius: var(--radius-md);
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.25);
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 25px;
+      position: relative;
+      overflow: hidden;
+      color: white;
+    }
+
+    .mobile-profile-section::after {
+      content: '';
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      width: 100px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+
+    .mobile-profile-section.active { display: flex; }
+
+    .mobile-profile-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mobile-profile-avatar {
+      width: 60px;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .mobile-profile-info h2 {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 2px;
+      letter-spacing: -0.5px;
+    }
+
+    .mobile-profile-info .kelas {
+      opacity: 0.8;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .mobile-profile-info .active-badge {
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 2px 8px;
+      border-radius: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .mobile-logout-btn {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fee2e2;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      z-index: 1;
+    }
+
+    .mobile-logout-btn:active { transform: scale(0.9); background: rgba(239, 68, 68, 0.4); }
+
+    /* ══════ SEARCH ══════ */
+    .mobile-search-section {
+      margin-bottom: 25px;
+    }
+
+    .mobile-search-card {
+      display: flex;
+      gap: 12px;
+    }
+
+    .mobile-search-input-wrap {
+      flex: 1;
+      background: var(--bg-glass);
+      backdrop-filter: blur(8px);
+      border-radius: var(--radius-sm);
+      padding: 4px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+    }
+
+    .mobile-search-input-wrap:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+      background: white;
+    }
+
+    .mobile-search-input-wrap i {
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+
+    .mobile-search-input {
+      border: none;
+      background: none;
+      outline: none;
+      height: 48px;
+      flex: 1;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      width: 100%;
+    }
+
+    .mobile-search-input::placeholder { color: #94a3b8; font-weight: 500; }
+
+    .mobile-filter-btn {
+      width: 54px;
+      height: 54px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(8px);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      color: var(--primary);
+      flex-shrink: 0;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s;
+    }
+
+    .mobile-filter-btn:active { transform: scale(0.9); }
+
+    /* ══════ MENU GRID ══════ */
+    .mobile-menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .mobile-menu-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      cursor: pointer;
+      background: var(--bg-glass);
+      backdrop-filter: blur(8px);
+      border-radius: var(--radius-md);
+      padding: 16px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .mobile-menu-item:active { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+
+    .mobile-menu-icon {
+      font-size: 24px;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 16px;
+    }
+
+    .mobile-menu-icon.green { background: #ecfdf5; color: #10b981; }
+    .mobile-menu-icon.orange { background: #fffbeb; color: #f59e0b; }
+    .mobile-menu-icon.cyan { background: #ecfeff; color: #06b6d4; }
+
+    .mobile-menu-label {
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    /* ══════ SCHEDULE ══════ */
+    .mobile-schedule-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .mobile-schedule-title {
+      color: var(--text-main);
+      font-size: 20px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .mobile-schedule-title i { color: var(--primary); }
+
+    .mobile-schedule-count {
+      background: var(--primary);
+      color: white;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 30px;
+      box-shadow: 0 4px 10px rgba(99, 102, 241, 0.2);
+    }
+
+    .mobile-schedule-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .mobile-schedule-card {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid #f1f5f9;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .mobile-schedule-card:active { transform: scale(0.98); }
+
+    .mobile-schedule-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 6px; height: 100%;
+      background: #e2e8f0;
+    }
+
+    .mobile-schedule-card.active::before { background: var(--accent); }
+    .mobile-schedule-card.sync::before { background: var(--primary); }
+
+    .mobile-schedule-details { flex: 1; min-width: 0; }
+
+    .mobile-schedule-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .mobile-schedule-badge.active { background: #dcfce7; color: #15803d; }
+    .mobile-schedule-badge.waiting { background: #fef9c3; color: #a16207; }
+    .mobile-schedule-badge.sync { background: #e0e7ff; color: #4338ca; }
+    .mobile-schedule-badge.closed { background: #fee2e2; color: #b91c1c; }
+
+    .mobile-schedule-name {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .mobile-schedule-time {
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .mobile-schedule-btn {
+      width: 100%;
+      background: #f1f5f9;
+      color: #64748b;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .mobile-schedule-btn.active {
+      background: linear-gradient(135deg, var(--accent), #059669);
+      color: white;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    }
+
+    .mobile-schedule-btn.sync {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+    }
+
+    .mobile-schedule-btn.view-result {
+      margin-top: 8px;
+      background: #f8fafc;
+      color: var(--primary);
+      border: 1.5px solid #e2e8f0;
+    }
+
+    /* ══════ SKELETON ══════ */
+    .skeleton-card {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .skeleton-line {
+      background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 6px;
+      height: 12px;
+      margin-bottom: 12px;
+    }
+
+    .skeleton-line.short { width: 40%; }
+    .skeleton-line.medium { width: 70%; }
+    .skeleton-line.long { width: 100%; height: 40px; margin-top: 10px; border-radius: 12px; }
+
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+    /* ══════ FLOATING RESULT BUTTON ══════ */
+    .float-result-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+      color: white;
+      border: none;
+      padding: 16px 24px;
+      border-radius: 50px;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 25px rgba(109, 40, 217, 0.4);
+      z-index: 100;
+      animation: pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .float-result-btn.show { display: flex; }
+
+    /* ══════ MODALS ══════ */
+    .mobile-confirm-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .mobile-confirm-overlay.show { opacity: 1; pointer-events: auto; }
+
+    .mobile-confirm-card {
+      background: white;
+      border-radius: var(--radius-lg);
+      padding: 30px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(20px) scale(0.95);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .mobile-confirm-overlay.show .mobile-confirm-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .mobile-confirm-card h3 { 
+      font-size: 20px; 
+      font-weight: 800; 
+      margin-bottom: 8px; 
+      text-align: center; 
+      letter-spacing: -0.5px;
+    }
+
+    .mobile-confirm-avatar {
+      width: 64px; height: 64px;
+      background: #f1f5f9;
+      border-radius: 20px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+    }
+
+    .mobile-confirm-name { text-align: center; font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+    .mobile-confirm-class { text-align: center; font-size: 14px; color: var(--text-muted); font-weight: 500; margin-bottom: 24px; }
+
+    .mobile-confirm-input {
+      width: 100%;
+      padding: 16px;
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+      outline: none;
+      margin-bottom: 24px;
+      transition: all 0.2s;
+    }
+
+    .mobile-confirm-input:focus { border-color: var(--primary); background: white; }
+
+    .mobile-confirm-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-cancel, .btn-confirm {
+      flex: 1;
+      padding: 14px;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 15px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-cancel { background: #f1f5f9; color: #64748b; }
+    .btn-confirm { 
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
+      color: white; 
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    }
+
+    /* ══════ LOADING ══════ */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .loading-overlay.active { opacity: 1; pointer-events: auto; }
+
+    .loading-spinner {
+      width: 40px; height: 40px;
+      border: 4px solid #f1f5f9;
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @keyframes pop-in {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .loading-text { font-size: 15px; font-weight: 700; color: var(--text-main); }
+
+    /* ══════ AUTOCOMPLETE ══════ */
+    .autocomplete-list {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0; right: 0;
+      background: white;
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      max-height: 250px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+      border: 1px solid #f1f5f9;
+      animation: pop-in 0.2s ease-out;
+    }
+
+    .autocomplete-list.show { display: block; }
+
+    .autocomplete-item {
+      padding: 14px 20px;
+      border-bottom: 1px solid #f8fafc;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .autocomplete-item:last-child { border-bottom: none; }
+    .autocomplete-item:active { background: #f1f5f9; color: var(--primary); }
+
+    /* Misc Hide */
+    .view, .portal-layout, .login-layout { display: none; }
+
+  </style>
+</head>
+
+<body oncontextmenu="return false;">
+
+  <div class="app-container">
+
+    <!-- ════════════════ HEADER ════════════════ -->
+    <div class="mobile-header">
+      <div class="mobile-header-top">
+        <div class="mobile-header-left">
+          <div class="mobile-logo" id="mobile-logo">
+            <i class="fas fa-school" id="mobile-logo-fallback"></i>
+            <img id="mobile-logo-img" src="" alt="Logo" style="display:none;width:100%;height:100%;object-fit:contain;">
+          </div>
+          <div>
+            <div class="mobile-school-name" id="mobile-school-name">CBT Online</div>
+            <div class="mobile-school-sub" id="mobile-school-sub">Computer Based Test</div>
+          </div>
+        </div>
+        <div id="mobile-header-clock" class="mobile-header-clock">--:--</div>
+      </div>
+    </div>
+
+    <!-- ════════════════ CONTENT ════════════════ -->
+    <div class="mobile-content">
+
+      <!-- Status bar (moved inside white card) -->
+      <div class="mobile-status-bar">
+        <div class="mobile-status-left">
+          <span id="mobile-status-dot" class="mobile-status-dot"></span>
+          <span id="mobile-status-user" class="mobile-status-user-placeholder">Belum login</span>
+        </div>
+        <div class="mobile-sync-badge" id="mobile-sync-badge" title="Klik untuk sinkronisasi">
+          <span id="mobile-sync-dot" class="mobile-sync-dot"></span>
+          <span id="mobile-sync-text">Sync...</span>
+        </div>
+      </div>
+
+      <!-- Sync Page (Wajib Armor 1000) -->
+      <div id="mobile-sync-page" style="display:none; text-align:center; padding: 32px 20px; flex-direction: column; justify-content: center; align-items: center; background: white; border-radius: 16px; margin-top: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); min-height: 55vh;">
+
+        <!-- State 1: Loading persiapan data (spinner) -->
+        <div id="sync-state-loading" style="display:flex; flex-direction:column; align-items:center; gap:16px;">
+          <div style="width:64px; height:64px; border:5px solid #F3F4F6; border-top-color: var(--primary); border-radius:50%; animation: spin 0.8s linear infinite;"></div>
+          <p style="font-size:14px; font-weight:600; color:var(--text-light);">Menyiapkan data ujian...</p>
+        </div>
+
+        <!-- State 2: Siap sinkron (tombol mulai) -->
+        <div id="sync-state-ready" style="display:none; flex-direction:column; align-items:center; width:100%;">
+          <div style="font-size:56px; color:var(--primary); margin-bottom:16px; animation: pulse-icon 2s ease-in-out infinite;">
+            <i class="fas fa-cloud-download-alt"></i>
+          </div>
+          <h2 style="font-size:20px; font-weight:700; color:var(--text); margin-bottom:8px;">Sinkronisasi Soal</h2>
+          <p style="font-size:13px; color:var(--text-light); margin-bottom:24px; line-height:1.6; max-width:280px;">Seluruh soal ujian akan diunduh ke perangkat Anda untuk keamanan dan kelancaran ujian.</p>
+          <div id="sync-ready-info" style="background:#EEF2FF; border-radius:10px; padding:12px 16px; margin-bottom:24px; width:100%; max-width:300px; text-align:left;">
+            <div style="font-size:12px; color:#6366F1; font-weight:700; margin-bottom:4px;">📋 INFO UJIAN</div>
+            <div id="sync-ready-count" style="font-size:13px; color:var(--text); font-weight:600;">Memuat...</div>
+          </div>
+          <button id="btnSyncAllSoal" class="btn-confirm" style="width:100%; max-width:300px; padding:14px; border-radius:12px; font-weight:700; font-size:15px; display:flex; align-items:center; justify-content:center; gap:8px;">
+            <i class="fas fa-download"></i> Mulai Sinkronisasi
+          </button>
+        </div>
+
+        <!-- State 3: Proses sinkronisasi berjalan -->
+        <div id="sync-state-progress" style="display:none; flex-direction:column; align-items:center; width:100%;">
+          <div style="font-size:48px; color:var(--primary); margin-bottom:16px;">
+            <i class="fas fa-sync-alt fa-spin"></i>
+          </div>
+          <h2 style="font-size:18px; font-weight:700; color:var(--text); margin-bottom:6px;">Mengunduh Soal...</h2>
+          <p style="font-size:12px; color:var(--text-light); margin-bottom:20px;">Jangan tutup atau minimize aplikasi ini</p>
+          <div id="sync-all-progress" style="width:100%; max-width:300px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+              <span id="sync-all-text" style="font-size:12px; font-weight:600; color:var(--text-light);">0%</span>
+              <span id="sync-file-label" style="font-size:12px; color:var(--text-light);">0 / 0 soal</span>
+            </div>
+            <div style="height:10px; background:#F3F4F6; border-radius:8px; overflow:hidden; box-shadow:inset 0 1px 3px rgba(0,0,0,0.1);">
+              <div id="sync-all-bar" style="height:100%; width:0%; background:linear-gradient(90deg, var(--primary), #818CF8); transition:width 0.4s ease; border-radius:8px;"></div>
+            </div>
+          </div>
+          <p id="sync-current-item" style="font-size:11px; color:var(--text-light); margin-top:12px; max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"></p>
+        </div>
+
+        <!-- State 4: Selesai sukses -->
+        <div id="sync-state-done" style="display:none; flex-direction:column; align-items:center; width:100%;">
+          <div style="width:72px; height:72px; background:#D1FAE5; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:16px; animation: pop-in 0.4s ease;">
+            <i class="fas fa-check" style="font-size:32px; color:#059669;"></i>
+          </div>
+          <h2 style="font-size:20px; font-weight:700; color:#059669; margin-bottom:8px;">Sinkronisasi Selesai!</h2>
+          <p style="font-size:13px; color:var(--text-light); margin-bottom:24px; line-height:1.6;">Semua soal ujian sudah tersimpan di perangkat Anda dan siap digunakan.</p>
+          <button id="btnLanjutUtama" class="btn-confirm" style="width:100%; max-width:300px; padding:14px; border-radius:12px; font-weight:700; font-size:15px; background:linear-gradient(135deg, #059669, #10B981); display:flex; align-items:center; justify-content:center; gap:8px;">
+            Ke Halaman Utama <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+
+        <!-- State 5: Gagal sebagian -->
+        <div id="sync-state-error" style="display:none; flex-direction:column; align-items:center; width:100%;">
+          <div style="font-size:48px; color:#F59E0B; margin-bottom:16px;">⚠️</div>
+          <h2 style="font-size:18px; font-weight:700; color:var(--text); margin-bottom:8px;">Sinkronisasi Sebagian</h2>
+          <p id="sync-error-msg" style="font-size:13px; color:var(--text-light); margin-bottom:24px; line-height:1.6;">Beberapa soal gagal diunduh. Pastikan koneksi internet stabil.</p>
+          <button id="btnRetrySyncAllSoal" class="btn-confirm" style="width:100%; max-width:300px; padding:14px; border-radius:12px; font-weight:700; font-size:15px; background:#F59E0B;">
+            <i class="fas fa-redo"></i> Ulangi Sinkronisasi
+          </button>
+        </div>
+      </div>
+
+
+      <!-- Profile section (shown after login) -->
+      <div class="mobile-profile-section" id="mobile-profile-section">
+        <div class="mobile-profile-left">
+          <div class="mobile-profile-avatar">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <div class="mobile-profile-info">
+            <h2 id="mobile-profile-name">-</h2>
+            <div class="kelas" id="mobile-profile-class">-</div>
+            <div class="active-badge"><i class="fas fa-star"></i> Siswa Aktif</div>
+          </div>
+        </div>
+        <button class="mobile-logout-btn" id="nav-logout">
+          <i class="fas fa-sign-out-alt"></i> Keluar
+        </button>
+      </div>
+
+      <!-- Search -->
+      <div class="mobile-search-section">
+        <div class="mobile-search-card">
+          <div class="mobile-search-input-wrap">
+            <i class="fas fa-search"></i>
+            <input type="text" id="userName" class="mobile-search-input" placeholder="Ketuk nama ujian..." autocomplete="off">
+            <div id="autocomplete-list" class="autocomplete-list"></div>
+          </div>
+          <button class="mobile-filter-btn" id="mobile-sync-badge-filter">
+            <i class="fas fa-sliders-h"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Menu grid (shown before login) -->
+      <div class="mobile-menu-grid" id="mobile-menu-grid">
+        <button class="mobile-menu-item" id="menu-panduan">
+          <i class="fas fa-file-alt mobile-menu-icon green"></i>
+          <span class="mobile-menu-label">Panduan</span>
+        </button>
+        <button class="mobile-menu-item" id="menu-tatib">
+          <i class="fas fa-clipboard-check mobile-menu-icon orange"></i>
+          <span class="mobile-menu-label">Tata Tertib</span>
+        </button>
+        <button class="mobile-menu-item" id="menu-bantuan">
+          <i class="fas fa-life-ring mobile-menu-icon cyan"></i>
+          <span class="mobile-menu-label">Bantuan</span>
+        </button>
+      </div>
+
+      <!-- Schedule list -->
+      <div class="mobile-schedule">
+        <div class="mobile-schedule-header">
+          <div class="mobile-schedule-title">
+            <i class="fas fa-calendar"></i>
+            Jadwal Ujian
+          </div>
+          <span id="schedule-count" class="mobile-schedule-count">0</span>
+        </div>
+        <div id="mobile-schedule-list" class="mobile-schedule-list">
+          <!-- Skeleton loading -->
+          <div class="skeleton-card">
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line medium"></div>
+            <div class="skeleton-line long"></div>
+            <div class="skeleton-line btn"></div>
+          </div>
+          <div class="skeleton-card" style="margin-top:12px;">
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-line medium"></div>
+            <div class="skeleton-line long"></div>
+            <div class="skeleton-line btn"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Floating result button -->
+  <button class="float-result-btn" id="float-result-btn">
+    <i class="fas fa-chart-bar"></i> Lihat Nilai
+  </button>
+
+  <!-- ════════════════ MODALS ════════════════ -->
+
+  <!-- Panduan -->
+  <div id="mobile-modal-panduan" class="mobile-confirm-overlay">
+    <div class="mobile-confirm-card" style="text-align:left;">
+      <h3 style="text-align:center;">Panduan Ujian</h3>
+      <div style="font-size:13px;color:#4B5563;line-height:1.6;max-height:350px;overflow-y:auto;">
+        <p><b>1. LOGIN</b><br>Ketik nama lengkap Anda, lalu pilih dari daftar autocomplete. Tekan <i>Lanjut</i> untuk konfirmasi identitas.</p>
+        <p><b>2. SINKRONISASI</b><br>Tekan tombol <i>Sinkronisasi Soal</i> untuk mengunduh semua soal ke perangkat. Tunggu hingga progress mencapai 100%.</p>
+        <p><b>3. LIHAT JADWAL</b><br>Setelah sinkron selesai, tekan <i>Ke Halaman Utama</i>. Lihat jadwal ujian yang tersedia untuk kelas Anda.</p>
+        <p><b>4. MASUKKAN TOKEN</b><br>Tekan tombol <i>Mulai Ujian</i> pada jadwal yang aktif, lalu masukkan token yang diberikan oleh pengawas. Jika token salah, modal akan muncul kembali.</p>
+        <p><b>5. KERJAKAN SOAL</b><br>Jawab soal dengan memilih opsi atau mengetik jawaban. Gunakan tombol <i>Ragu-ragu</i> untuk menandai soal yang perlu direview (tanda kuning di daftar soal).</p>
+        <p><b>6. WAKTU & MINIMAL</b><br>Perhatikan timer di atas. Anda wajib mengerjakan minimal <span id="panduan-min-time">15</span> menit sebelum tombol selesai bisa ditekan.</p>
+        <p><b>7. SELESAI</b><br>Tekan tombol <i>Selesai</i> (selalu tampil di bawah) atau tunggu waktu habis. Jawaban tersimpan otomatis.</p>
+        <p><b>8. LIHAT NILAI</b><br>Setelah submit, Anda bisa melihat nilai langsung atau melalui menu <i>Lihat Nilai</i> di halaman utama.</p>
+      </div>
+      <button class="btn-confirm" style="width:100%;margin-top:12px;" onclick="closeModal('mobile-modal-panduan')">Mengerti</button>
+    </div>
+  </div>
+
+  <!-- Tata Tertib -->
+  <div id="mobile-modal-tatib" class="mobile-confirm-overlay">
+    <div class="mobile-confirm-card" style="text-align:left;">
+      <h3 style="text-align:center;">Tata Tertib Ujian</h3>
+      <div style="font-size:13px;color:#4B5563;line-height:1.6;max-height:300px;overflow-y:auto;">
+        <p><b>1.</b> Hadir 10 menit sebelum ujian dimulai.</p>
+        <p><b>2.</b> Wajib membawa perlengkapan ujian.</p>
+        <p><b>3.</b> Dilarang membuka aplikasi lain saat ujian.</p>
+        <p><b>4.</b> Tidak diperbolehkan bekerja sama dengan peserta lain.</p>
+        <p><b>5.</b> Melaporkan jika terjadi kendala teknis.</p>
+      </div>
+      <button class="btn-confirm" style="width:100%;margin-top:12px;" onclick="closeModal('mobile-modal-tatib')">Mengerti</button>
+    </div>
+  </div>
+
+  <!-- Bantuan -->
+  <div id="mobile-modal-bantuan" class="mobile-confirm-overlay">
+    <div class="mobile-confirm-card" style="text-align:left;">
+      <h3 style="text-align:center;">Pusat Bantuan</h3>
+      <div style="font-size:13px;color:#4B5563;line-height:1.6;max-height:300px;overflow-y:auto;">
+        <p><b>Soal tidak muncul?</b> Tekan Sync pada jadwal, atau hubungi pengawas.</p>
+        <p><b>Lupa nama login?</b> Tanyakan pada pengawas.</p>
+        <p><b>Token salah?</b> Pastikan token sesuai dari pengawas.</p>
+        <p><b>Waktu habis?</b> Jawaban tersimpan otomatis.</p>
+      </div>
+      <button class="btn-confirm" style="width:100%;margin-top:12px;" onclick="closeModal('mobile-modal-bantuan')">Tutup</button>
+    </div>
+  </div>
+
+  <!-- Confirm Login -->
+  <div id="mobile-confirm-overlay" class="mobile-confirm-overlay">
+    <div class="mobile-confirm-card">
+      <div class="mobile-confirm-avatar">
+        <i class="fas fa-user" style="font-size:24px;"></i>
+      </div>
+      <div id="mobile-confirm-name" class="mobile-confirm-name">-</div>
+      <div id="mobile-confirm-class" class="mobile-confirm-class">-</div>
+      <div class="mobile-confirm-actions">
+        <button class="btn-cancel" id="btnCancelLogin">Batal</button>
+        <button class="btn-confirm" id="btnConfirmLogin">Lanjut</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div id="mobile-loading" class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div id="mobile-loading-text" class="loading-text">Memuat...</div>
+  </div>
+
+  <!-- Custom Alert -->
+  <div id="custom-alert-modal" class="mobile-confirm-overlay">
+    <div class="mobile-confirm-card">
+      <div id="custom-alert-icon" style="font-size:2rem;margin-bottom:8px;text-align:center;">⚠️</div>
+      <h3 id="custom-alert-title">Alert</h3>
+      <p id="custom-alert-message"></p>
+      <div class="mobile-confirm-actions">
+        <button class="btn-cancel" id="custom-alert-cancel" style="display:none;" onclick="closeCustomAlert(false)">Batal</button>
+        <button class="btn-confirm" id="custom-alert-ok" style="flex:1;" onclick="closeCustomAlert(true)">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Token Modal -->
+  <div id="mobile-token-overlay" class="mobile-confirm-overlay">
+    <div class="mobile-confirm-card">
+      <div style="font-size:2rem;margin-bottom:8px;text-align:center;">🔐</div>
+      <h3>Masukkan Token</h3>
+      <p>Minta token kepada pengawas</p>
+      <input type="text" id="examTokenInput" class="mobile-confirm-input" style="letter-spacing:3px;font-weight:700;text-transform:uppercase;" placeholder="XXXXXX">
+      <div class="mobile-confirm-actions">
+        <button class="btn-cancel" id="btnCancelToken">Batal</button>
+        <button class="btn-confirm" id="btnSubmitToken">Masuk</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden compat -->
+  <div id="login-view" class="view portal-layout" style="display:none;"></div>
+  <div id="schedule-view" class="view portal-layout" style="display:none;"></div>
+  <div id="dashboard-view" class="view portal-layout" style="display:none;"></div>
+  <div id="login-confirm-view" class="view login-layout" style="display:none;"></div>
+  <!-- Premium Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay" style="display:none;">
+    <div class="loader-content-card">
+      <div class="spinner-premium"></div>
+      <p id="loading-overlay-text">Memuat...</p>
+    </div>
+  </div>
+
+  <!-- PWA Blocker Overlay — tampil jika PWA mode ON dan belum install -->
+  <div id="pwa-blocker-overlay" style="
+    display:none; position:fixed; inset:0; z-index:999999;
+    background:linear-gradient(135deg,#1e3a5f 0%,#0f2027 100%);
+    align-items:center; justify-content:center; padding:24px;
+    flex-direction:column; text-align:center;">
+    <div style="background:white; border-radius:24px; padding:32px 24px; max-width:360px; width:100%; box-shadow:0 20px 60px rgba(0,0,0,0.4);">
+      <div style="font-size:3rem; margin-bottom:12px;">📱</div>
+      <h2 style="font-size:1.2rem; font-weight:800; color:#0f2027; margin:0 0 8px;">Wajib Install Aplikasi</h2>
+      <p style="font-size:0.85rem; color:#64748b; margin:0 0 20px; line-height:1.6;">
+        Ujian ini hanya bisa diakses melalui aplikasi yang sudah diinstall di perangkat Anda.
+      </p>
+
+      <!-- Panduan install per browser -->
+      <div style="background:#f0f9ff; border-radius:12px; padding:14px; margin-bottom:20px; text-align:left;">
+        <div style="font-size:0.75rem; font-weight:700; color:#0369a1; margin-bottom:8px;">📋 CARA INSTALL:</div>
+        <div style="font-size:0.78rem; color:#334155; line-height:1.8;">
+          <b>Chrome Android:</b> Menu ⋮ → "Tambahkan ke layar utama"<br>
+          <b>Safari iOS:</b> Tombol Bagikan □↑ → "Tambah ke Layar Utama"<br>
+          <b>Chrome Desktop:</b> Ikon install ⊕ di address bar
+        </div>
+      </div>
+
+      <!-- Tombol install (muncul jika browser support) -->
+      <button id="btn-pwa-install" onclick="window.triggerPwaInstall()" style="
+        display:none; width:100%; padding:13px; border:none; border-radius:12px;
+        background:linear-gradient(135deg,#3b82f6,#1d4ed8); color:white;
+        font-size:0.95rem; font-weight:700; cursor:pointer; margin-bottom:12px;">
+        ⬇️ Install Sekarang
+      </button>
+
+      <!-- Bypass untuk proktor -->
+      <div style="border-top:1px solid #e2e8f0; padding-top:16px; margin-top:4px;">
+        <p style="font-size:0.75rem; color:#94a3b8; margin:0 0 8px;">Proktor? Masukkan kode bypass:</p>
+        <div style="display:flex; gap:8px;">
+          <input id="pwaBypassInput" type="text" placeholder="Kode bypass"
+            style="flex:1; padding:10px 12px; border:2px solid #e2e8f0; border-radius:10px;
+            font-size:0.85rem; outline:none; text-transform:uppercase; letter-spacing:2px;"
+            onkeydown="if(event.key==='Enter') verifyPwaBypass()">
+          <button onclick="verifyPwaBypass()" style="
+            padding:10px 16px; border:none; border-radius:10px;
+            background:#f59e0b; color:white; font-weight:700; cursor:pointer; font-size:0.85rem;">
+            OK
+          </button>
+        </div>
+        <p id="pwaBypassError" style="display:none; font-size:0.75rem; color:#ef4444; margin:6px 0 0;"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PWA Install Banner (muncul di atas saat browser support install) -->
+  <div id="pwa-install-banner" style="
+    display:none; position:fixed; bottom:0; left:0; right:0; z-index:9999;
+    background:linear-gradient(135deg,#1d4ed8,#3b82f6); color:white;
+    padding:14px 20px; align-items:center; justify-content:space-between; gap:12px;
+    box-shadow:0 -4px 20px rgba(0,0,0,0.2);">
+    <div style="flex:1;">
+      <div style="font-weight:700; font-size:0.9rem;">Install Aplikasi CBT</div>
+      <div style="font-size:0.75rem; opacity:0.85;">Untuk pengalaman ujian yang lebih baik</div>
+    </div>
+    <button id="btn-pwa-install-banner" onclick="window.triggerPwaInstall()" style="
+      padding:9px 18px; border:none; border-radius:10px;
+      background:white; color:#1d4ed8; font-weight:700; cursor:pointer; font-size:0.85rem; white-space:nowrap;">
+      Install
+    </button>
+    <button onclick="document.getElementById('pwa-install-banner').style.display='none'" style="
+      background:none; border:none; color:white; font-size:1.2rem; cursor:pointer; padding:4px;">✕</button>
+  </div>
+
+
+  <script src="supabase-adapter.js?v=2"></script>
+  <script src="supabase-patch.js?v=8"></script>
+  <script src="queue-system.js?v=3"></script>
+  <script src="script.js?v=9"></script>
+  <script src="admin-auth.js?v=1"></script>
+  <script src="mobile-core.js?v=4"></script>
+  <script src="pwa-core.js?v=4"></script>
+</body>
+</html>

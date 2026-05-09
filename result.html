@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Hasil Ujian - CBT Online</title>
+
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+  <link rel="stylesheet" href="style.css?v=2">
+
+</head>
+
+<body oncontextmenu="return false;" class="result-page">
+
+  <!-- ══════════════════════════════════════
+     RESULT VIEW
+  ══════════════════════════════════════ -->
+  <div id="result-view" class="view active result-layout">
+    <div class="result-container">
+      <div class="result-card">
+        <div class="result-icon">
+          <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+          </svg>
+        </div>
+
+        <h2 class="result-title">Hasil Ujian</h2>
+        <p id="result-exam-name" class="result-exam-sub">-</p>
+
+        <div id="result-score" class="result-score">0</div>
+        <p class="result-score-label">Nilai Anda</p>
+
+        <div class="result-stats">
+          <div class="stat-item">
+            <div class="stat-value" id="result-correct">0</div>
+            <div class="stat-label">Benar</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="result-wrong">0</div>
+            <div class="stat-label">Salah</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="result-empty">0</div>
+            <div class="stat-label">Kosong</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="result-total">0</div>
+            <div class="stat-label">Total Soal</div>
+          </div>
+        </div>
+
+        <div class="result-info">
+          <div class="result-info-row">
+            <span class="info-label">Nama</span>
+            <span class="info-value" id="result-name">-</span>
+          </div>
+          <div class="result-info-row">
+            <span class="info-label">Kelas</span>
+            <span class="info-value" id="result-kelas">-</span>
+          </div>
+          <div class="result-info-row">
+            <span class="info-label">Waktu Selesai</span>
+            <span class="info-value" id="result-time">-</span>
+          </div>
+          <div class="result-info-row">
+            <span class="info-label">Pelanggaran</span>
+            <span class="info-value" id="result-violations">0</span>
+          </div>
+        </div>
+
+        <div id="result-remedial-info" class="remedial-info" style="display:none;">
+          <div class="remedial-badge">Remedial</div>
+          <p id="remedial-msg">Nilai di bawah KKM. Anda akan dijadwalkan ujian remedial oleh guru.</p>
+        </div>
+
+        <button id="btnBackSchedule" class="btn btn-primary result-btn">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M15 19l-7-7 7-7"/>
+          </svg>
+          Kembali ke Jadwal
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Premium Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay" style="display:none;">
+    <div class="loader-content-card">
+      <div class="spinner-premium"></div>
+      <p id="loading-overlay-text">Memuat hasil...</p>
+    </div>
+  </div>
+
+  <!-- Custom Alert Modal -->
+  <div id="custom-alert-modal" class="custom-alert-overlay" style="display:none;">
+    <div class="custom-alert-card">
+      <div id="custom-alert-icon" style="font-size:2.5rem;margin-bottom:12px;">⚠️</div>
+      <h3 id="custom-alert-title" style="margin:0 0 8px 0;font-size:1rem;"></h3>
+      <p id="custom-alert-message" style="font-size:0.85rem;color:var(--text-muted);margin:0 0 20px 0;white-space:pre-wrap;line-height:1.5;"></p>
+      <button class="btn btn-primary btn-block" onclick="closeCustomAlert()" style="padding:10px;">OK</button>
+    </div>
+  </div>
+
+  <script src="supabase-adapter.js?v=2"></script>
+  <script src="supabase-patch.js?v=8"></script>
+  <script src="script.js?v=10"></script>
+  <script src="result-core.js?v=2"></script>
+</body>
+</html>
