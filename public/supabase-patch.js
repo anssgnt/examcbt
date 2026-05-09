@@ -148,22 +148,10 @@
                 return { val: () => data, exists: () => res.success };
             }
             if (path === 'pelanggaran') {
-                // Try Supabase first, fallback to Firebase
-                let data = {};
-                const supRes = await fetchSupabase('pelanggaran', { order: 'timestamp.desc', limit: 200 });
-                if (supRes.success && supRes.data.length > 0) {
-                    supRes.data.forEach((p, i) => data['p' + i] = p);
-                } else {
-                    // Fallback to Firebase if Supabase is empty
-                    try {
-                        const fbSnap = await db.ref('/pelanggaran').limitToLast(200).once('value');
-                        const fbData = fbSnap.val() || {};
-                        data = fbData;
-                    } catch (e) {
-                        console.warn('[supabase-patch] Error reading pelanggaran from Firebase:', e);
-                    }
-                }
-                return { val: () => data, exists: () => Object.keys(data).length > 0 };
+                const res = await fetchSupabase('pelanggaran', { order: 'timestamp.desc', limit: 200 });
+                const data = {};
+                if (res.success) res.data.forEach((p, i) => data['p' + i] = p);
+                return { val: () => data, exists: () => res.success };
             }
             if (path === 'status_sync') {
                 const res = await fetchSupabase('status_sync');
@@ -876,19 +864,7 @@
                   ]);
                   let hData = supH.success ? supH.data : [];
                   let pData = supP.success ? supP.data : [];
-                  
-                  // Fallback to Firebase if Supabase is empty
-                  if (pData.length === 0) {
-                      try {
-                          const fbSnap = await db.ref('/pelanggaran').limitToLast(200).once('value');
-                          const fbData = fbSnap.val() || {};
-                          pData = Object.values(fbData);
-                          console.log('📊 [supabase-patch] Fallback to Firebase - pData length:', pData.length);
-                      } catch (e) {
-                          console.warn('[supabase-patch] Error reading pelanggaran from Firebase:', e);
-                      }
-                  }
-                  console.log('📊 [supabase-patch] getAdminLaporanLengkap - supP:', supP, 'pData length:', pData.length);
+                  console.log('📊 [supabase-patch] getAdminLaporanLengkap - pData length:', pData.length);
                   const jadwalMap = {};
                   if (supJ.success) supJ.data.forEach(j => { jadwalMap[j.id] = j; });
 
