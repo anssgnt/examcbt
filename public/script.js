@@ -1720,6 +1720,7 @@ async function gasRun(funcName, ...args) {
         db.ref('/pelanggaran').limitToLast(200).once('value')
       ]);
       const hData = hSnap.val() || {}; const pData = pSnap.val() || {};
+      console.log('📊 getAdminLaporanLengkap - pData:', pData, 'pData keys:', Object.keys(pData));
 
       const hasilResult = Object.values(hData).sort((a, b) => b.timestamp - a.timestamp).map(h => {
         let d = new Date(h.timestamp || Date.now());
@@ -1736,6 +1737,7 @@ async function gasRun(funcName, ...args) {
           nama: p.nama, kelas: p.kelas, ujian: p.examId, tipe: p.tipe
         };
       });
+      console.log('📊 getAdminLaporanLengkap - pelResult:', pelResult.length, 'items');
       return { success: true, hasil: hasilResult, pelanggaran: pelResult };
     }
 
