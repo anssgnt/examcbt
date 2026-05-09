@@ -225,14 +225,9 @@
   <script>
     // Register Service Workers
     if ('serviceWorker' in navigator) {
-      // Phase 3: Image Cache Service Worker
-      navigator.serviceWorker.register('/sw-image-cache.js')
-        .then(reg => console.log('✅ Image Cache SW registered'))
-        .catch(err => console.error('❌ Image Cache SW error:', err));
-      
-      // Phase 4: Advanced Service Worker
+      // Phase 4: Advanced Service Worker (includes image cache)
       navigator.serviceWorker.register('/sw-advanced.js')
-        .then(reg => console.log('✅ Advanced SW registered'))
+        .then(reg => console.log('✅ Advanced SW registered (includes image cache)'))
         .catch(err => console.error('❌ Advanced SW error:', err));
     }
   </script>
