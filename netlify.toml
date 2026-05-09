@@ -34,17 +34,17 @@
 [[headers]]
   for = "/*.js"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    Cache-Control = "public, max-age=31536000"
 
 [[headers]]
   for = "/*.css"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    Cache-Control = "public, max-age=31536000"
 
 [[headers]]
   for = "/*.woff2"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    Cache-Control = "public, max-age=31536000"
 
 # Don't cache HTML (always check for updates)
 [[headers]]
@@ -81,10 +81,8 @@
 # COMPRESSION
 # ============================================
 
-[[headers]]
-  for = "/*"
-  [headers.values]
-    Content-Encoding = "gzip"
+# Note: Netlify handles compression automatically
+# Do not set Content-Encoding header manually
 
 # ============================================
 # CONTEXT-SPECIFIC SETTINGS
