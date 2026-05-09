@@ -810,6 +810,7 @@ window.saveJadwal = async function () {
 };
 
 async function loadAdminHasil(resetPage = false) {
+  console.log('📋 loadAdminHasil called with resetPage:', resetPage);
   const tbHasil = document.getElementById('admin-hasil-tbody');
   const tbRadar = document.getElementById('admin-radar-tbody');
 
