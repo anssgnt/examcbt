@@ -1424,6 +1424,8 @@ async function gasRun(funcName, ...args) {
     await dbConnectFast();
   }
 
+  console.log('🔧 gasRun called:', funcName, 'args:', args);
+
   try {
     if (funcName === 'getAllPeserta') {
       // Cek Cache Local Storage (Valid 30 Menit)
