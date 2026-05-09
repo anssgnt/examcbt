@@ -1733,7 +1733,7 @@ async function gasRun(funcName, ...args) {
         let d = new Date(p.timestamp || Date.now());
         return {
           waktu: `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')} ${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`,
-          nama: p.nama, ujian: p.examId, tipe: p.tipe
+          nama: p.nama, kelas: p.kelas, ujian: p.examId, tipe: p.tipe
         };
       });
       return { success: true, hasil: hasilResult, pelanggaran: pelResult };

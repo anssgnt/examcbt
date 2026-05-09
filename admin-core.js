@@ -814,8 +814,8 @@ async function loadAdminHasil(resetPage = false) {
   const tbRadar = document.getElementById('admin-radar-tbody');
 
   if (resetPage) {
-    if (tbHasil) tbHasil.innerHTML = '<tr><td colspan="4" class="text-center">Memuat...</td></tr>';
-    if (tbRadar) tbRadar.innerHTML = '<tr><td colspan="4" class="text-center">Memuat...</td></tr>';
+    if (tbHasil) tbHasil.innerHTML = '<tr><td colspan="5" class="text-center">Memuat...</td></tr>';
+    if (tbRadar) tbRadar.innerHTML = '<tr><td colspan="5" class="text-center">Memuat...</td></tr>';
 
     const res = await gasRun('getAdminLaporanLengkap');
     if (res.success) {
@@ -976,14 +976,15 @@ function renderAdminRadarPage(page) {
   const sliced = data.slice((page - 1) * perPage, page * perPage);
 
   if (sliced.length === 0) {
-    tbRadar.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Tidak ada log pelanggaran.</td></tr>';
+    tbRadar.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Tidak ada log pelanggaran.</td></tr>';
   } else {
     tbRadar.innerHTML = sliced.map(p => `
-      <tr>
+      <tr style="background-color:#FEF2F2;">
         <td>${p.waktu}</td>
-        <td><strong>${p.nama}</strong></td>
-        <td>${p.ujian}</td>
-        <td><span class="badge" style="background:#FEE2E2; color:#B91C1C; border:1px solid #FECACA;">${p.tipe}</span></td>
+        <td><strong style="color:#B91C1C;">⚠️ ${p.nama || '-'}</strong></td>
+        <td>${p.kelas || '-'}</td>
+        <td>${p.ujian || '-'}</td>
+        <td><span class="badge" style="background:#FEE2E2; color:#B91C1C; border:1px solid #FECACA;font-weight:bold;">${p.tipe || 'Pelanggaran'}</span></td>
       </tr>
     `).join('');
   }
