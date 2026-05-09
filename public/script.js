@@ -461,14 +461,39 @@ function handleCheatDetection() {
   }, 1000);
 
   withDB(async function () {
-    await db.ref('/pelanggaran').push({
+    const violationData = {
       waktu: new Date().toLocaleString('id-ID'),
       nama: State.user.name,
+      kelas: State.user.kelas,
       userId: State.user.id,
       ujian: State.config.nama_ujian,
       examId: State.config.id_ujian,
-      tipe: 'Keluar Layar/Ganti Tab'
-    });
+      tipe: 'Keluar Layar/Ganti Tab',
+      timestamp: new Date().toISOString()
+    };
+    
+    // Save to Firebase
+    await db.ref('/pelanggaran').push(violationData);
+    
+    // Sync to Supabase via Edge Function
+    try {
+      const response = await fetch(
+        'https://YOUR_SUPABASE_URL/functions/v1/sync-violations',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer YOUR_SUPABASE_ANON_KEY'
+          },
+          body: JSON.stringify({ violations: [violationData] })
+        }
+      );
+      if (!response.ok) {
+        console.warn('[handleCheatDetection] Failed to sync violation to Supabase:', response.status);
+      }
+    } catch (e) {
+      console.warn('[handleCheatDetection] Error syncing violation:', e);
+    }
   });
 }
 
