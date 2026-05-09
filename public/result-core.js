@@ -88,13 +88,22 @@
     const btnBack = document.getElementById('btnBackSchedule');
     if (btnBack) {
       btnBack.addEventListener('click', () => {
+        // Clear all exam-related data from localStorage
         localStorage.removeItem('CBT_LAST_RESULT');
+        localStorage.removeItem('CBT_EXAM_SESSION');
+        localStorage.removeItem('CBT_EXAM_STATE');
+        localStorage.removeItem('CBT_EXAM_CONFIG');
+        localStorage.removeItem('CBT_QUESTIONS');
+        
+        // Clear state
         State.user = null;
         State.answers = {};
         State.doubts = new Set();
         State.currentIndex = 0;
         State.timeRemaining = 0;
         State.examActive = false;
+        
+        // Redirect to home page
         window.location.href = 'index.html';
       });
     }
