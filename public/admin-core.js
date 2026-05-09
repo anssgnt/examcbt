@@ -822,11 +822,18 @@ async function loadAdminHasil(resetPage = false) {
     if (tbHasil) tbHasil.innerHTML = '<tr><td colspan="5" class="text-center">Memuat...</td></tr>';
     if (tbRadar) tbRadar.innerHTML = '<tr><td colspan="5" class="text-center">Memuat...</td></tr>';
 
-    const res = await gasRun('getAdminLaporanLengkap');
-    if (res.success) {
-      window.adminState.hasil = res.hasil || [];
-      window.adminState.radar = res.pelanggaran || [];
-      console.log('✅ Violations loaded:', window.adminState.radar.length, 'items');
+    try {
+      const res = await gasRun('getAdminLaporanLengkap');
+      console.log('📊 gasRun response:', res);
+      if (res.success) {
+        window.adminState.hasil = res.hasil || [];
+        window.adminState.radar = res.pelanggaran || [];
+        console.log('✅ Violations loaded:', window.adminState.radar.length, 'items');
+      } else {
+        console.error('❌ gasRun failed:', res);
+      }
+    } catch (err) {
+      console.error('❌ Error in loadAdminHasil:', err);
     }
   }
   renderAdminHasilPage(1);
