@@ -821,6 +821,7 @@ async function loadAdminHasil(resetPage = false) {
     if (res.success) {
       window.adminState.hasil = res.hasil || [];
       window.adminState.radar = res.pelanggaran || [];
+      console.log('✅ Violations loaded:', window.adminState.radar.length, 'items');
     }
   }
   renderAdminHasilPage(1);
@@ -973,6 +974,7 @@ function renderAdminRadarPage(page) {
   if (!tbRadar) return;
 
   const data = window.adminState.radar || [];
+  console.log('🔍 Rendering violations page', page, '- Total:', data.length, 'Data:', data);
   const sliced = data.slice((page - 1) * perPage, page * perPage);
 
   if (sliced.length === 0) {
