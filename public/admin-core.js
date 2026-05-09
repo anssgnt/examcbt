@@ -149,6 +149,7 @@
   // Tab switching
   document.querySelectorAll('.admin-sidebar-btn').forEach(btn => {
     btn.addEventListener('click', () => {
+      console.log('🔘 Tab clicked:', btn.dataset.tab);
       if (!btn.dataset.tab) return;
       document.querySelectorAll('.admin-sidebar-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.admin-tab-content').forEach(c => c.style.display = 'none');
@@ -162,7 +163,10 @@
       else if (btn.dataset.tab === 'tab-siswa') loadAdminSiswa();
       else if (btn.dataset.tab === 'tab-soal') loadAdminSoal();
       else if (btn.dataset.tab === 'tab-settings') loadAdminSettings();
-      else if (btn.dataset.tab === 'tab-hasil') loadAdminHasil(true);
+      else if (btn.dataset.tab === 'tab-hasil') {
+        console.log('📊 Tab Hasil clicked, calling loadAdminHasil(true)');
+        loadAdminHasil(true);
+      }
     });
   });
 
