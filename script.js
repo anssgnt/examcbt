@@ -1404,8 +1404,10 @@ function initAuth() {
 }
 
 async function gasRun(funcName, ...args) {
+  console.log('🔧 gasRun START:', funcName);
   // Delegate to supabase gasRun if available (avoids Firebase mock)
   if (window._supaGasRun) {
+    console.log('🔧 Using _supaGasRun');
     return window._supaGasRun(funcName, ...args);
   }
   if (!isAuthReady && authPromise) await authPromise;

@@ -864,6 +864,7 @@
                   ]);
                   const hData = supH.success ? supH.data : [];
                   const pData = supP.success ? supP.data : [];
+                  console.log('📊 [supabase-patch] getAdminLaporanLengkap - supP:', supP, 'pData length:', pData.length);
                   const jadwalMap = {};
                   if (supJ.success) supJ.data.forEach(j => { jadwalMap[j.id] = j; });
 
@@ -912,7 +913,7 @@
                       let d = p.timestamp ? new Date(p.timestamp) : new Date();
                       return {
                           waktu: `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')} ${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`,
-                          nama: p.nama || 'Unknown', ujian: p.exam_id || '', tipe: p.tipe || '', userId: p.user_id
+                          nama: p.nama || 'Unknown', kelas: p.kelas || '', ujian: p.exam_id || '', tipe: p.tipe || '', userId: p.user_id
                       };
                   });
                   return { success: true, hasil: hasilResult, pelanggaran: pelResult };
