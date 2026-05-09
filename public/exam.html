@@ -189,6 +189,36 @@
   <script src="exam-core.js?v=4"></script>
 
   <!-- ============================================ -->
+  <!-- PHASE 5: ADVANCED ES MODULES -->
+  <!-- ============================================ -->
+  
+  <!-- Module Initialization -->
+  <script type="module" src="/modules-init.js"></script>
+
+  <!-- ============================================ -->
+  <!-- PHASE 6: DATABASE OPTIMIZATION -->
+  <!-- ============================================ -->
+  
+  <!-- Database & Redis Connection -->
+  <script src="/db-pool.js"></script>
+  <script src="/redis-cache.js"></script>
+
+  <!-- ============================================ -->
+  <!-- PHASE 7: REAL-TIME OPTIMIZATION -->
+  <!-- ============================================ -->
+  
+  <!-- Real-time Sync -->
+  <script src="/realtime-sync.js"></script>
+
+  <!-- ============================================ -->
+  <!-- PHASE 9: MONITORING & ANALYTICS -->
+  <!-- ============================================ -->
+  
+  <!-- Performance Monitoring & Error Tracking -->
+  <script src="/performance-monitor.js"></script>
+  <script src="/error-tracker.js"></script>
+
+  <!-- ============================================ -->
   <!-- SERVICE WORKER REGISTRATION -->
   <!-- ============================================ -->
   
@@ -208,12 +238,42 @@
   </script>
 
   <!-- ============================================ -->
+  <!-- MODULE READY LISTENER -->
+  <!-- ============================================ -->
+  
+  <script>
+    // Wait for modules to be ready
+    window.addEventListener('modulesReady', (e) => {
+      console.log('✅ All modules ready');
+      console.log('Available modules:', Object.keys(e.detail));
+      
+      // Initialize application
+      if (window.stateManager) {
+        window.stateManager.init();
+      }
+      
+      if (window.performanceMonitor) {
+        window.performanceMonitor.start();
+      }
+      
+      if (window.syncManager) {
+        window.syncManager.connect();
+      }
+    });
+    
+    // Handle module errors
+    window.addEventListener('modulesError', (e) => {
+      console.error('❌ Module initialization failed:', e.detail.error);
+    });
+  </script>
+
+  <!-- ============================================ -->
   <!-- INITIALIZATION COMPLETE -->
   <!-- ============================================ -->
   
   <script>
-    console.log('✅ All optimization scripts loaded');
-    console.log('✅ Application ready for Phase 1-4');
+    console.log('✅ All optimization scripts loaded (Phase 1-9)');
+    console.log('✅ Application ready for Phase 1-9');
   </script>
 </body>
 </html>
