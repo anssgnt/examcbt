@@ -175,7 +175,14 @@ window.initSchoolIdentity = initSchoolIdentity;
 // --- Utilities ---
 function showView(viewId) {
   if (viewId === 'exam-view' && isIndexPage) {
-    window.location.href = 'exam.html';
+    // Check if exam is already submitted or session is cleared
+    const hasSession = localStorage.getItem('CBT_EXAM_SESSION');
+    const hasResult = localStorage.getItem('CBT_LAST_RESULT');
+    
+    // Only redirect if there's an active session and no result
+    if (hasSession && !hasResult) {
+      window.location.href = 'exam.html';
+    }
     return;
   }
   if (viewId === 'result-view' && isIndexPage) {
