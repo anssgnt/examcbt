@@ -478,12 +478,12 @@ function handleCheatDetection() {
     // Sync to Supabase via Edge Function
     try {
       const response = await fetch(
-        'https://YOUR_SUPABASE_URL/functions/v1/sync-violations',
+        'https://dmydinmosdxazypwdbed.supabase.co/functions/v1/sync-violations',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer YOUR_SUPABASE_ANON_KEY'
+            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRteWRpbm1vc2R4YXp5cGR3YmVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNTIxNjMsImV4cCI6MjA5MzcyODE2M30.mKY-dQDf3_1_GjNOtCYfsXF0o6qazPpq2ncuvfuGfu8'
           },
           body: JSON.stringify({ violations: [violationData] })
         }
