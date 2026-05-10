@@ -3717,6 +3717,7 @@ let portalClockInterval = null;
 let _portalLifecycleBound = false;
 
 function initPortal() {
+  window._portalInitialized = true; // Mark as initialized
   patchFirebase();
   initAuth();
   updateClock();
@@ -3939,10 +3940,27 @@ if (isIndexPage) {
   if (sessionStorage.getItem('admin_auth') === '1') {
     window.location.href = 'admin.html';
   } else {
-    initPortal();
+    // ✅ Wait for Supabase patch to inject db/auth before initPortal
+    if (window.db && window.auth) {
+      // Already ready
+      initPortal();
+    } else {
+      // Wait for supabase-patch-ready event
+      window.addEventListener('supabase-patch-ready', () => {
+        console.log('[Script] Supabase patch ready, initializing portal...');
+        initPortal();
+      }, { once: true });
+      
+      // Fallback: if event doesn't fire in 2 seconds, init anyway
+      setTimeout(() => {
+        if (!window._portalInitialized) {
+          console.warn('[Script] Supabase patch timeout, initializing portal anyway...');
+          initPortal();
+        }
+      }, 2000);
+    }
   }
 }
-
 // Anti spam refresh (Index only):
 // jika user reload berkali-kali dalam 60 detik, aktifkan cooldown sync berat 60 detik.
 try {

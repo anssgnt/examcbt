@@ -1205,3 +1205,7 @@
   }, 10000);
 
 })();
+
+// ✅ Signal that Supabase patch is ready
+window.dispatchEvent(new Event('supabase-patch-ready'));
+console.log('[Supabase Patch] ✅ Ready - db and auth mocked');
