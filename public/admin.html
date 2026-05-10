@@ -740,6 +740,8 @@
   </div>
 
   <script defer src="supabase-adapter.js?v=2"></script>
+  <!-- ✅ Firebase mock (MUST load before supabase-patch.js) -->
+  <script defer src="firebase-mock.js"></script>
   <!-- ✅ OPTIMIZATION: Lazy load supabase-patch only on admin page (70 KB saved on exam page) -->
   <script>
     // Load supabase-patch.js asynchronously after page load
