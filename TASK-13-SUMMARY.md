@@ -85,21 +85,21 @@ Files: 8 changed, 714 insertions(+)
 
 ### 1. Check Firebase Data
 ```
-URL: https://cbtmo.netlify.app/check-firebase-violations.html
+URL: https://examkita.netlify.app/check-firebase-violations.html
 Click: "Check Violations"
 Expected: See violations atau "No violations found"
 ```
 
 ### 2. Add Test Violations
 ```
-URL: https://cbtmo.netlify.app/test-violations.html
+URL: https://examkita.netlify.app/test-violations.html
 Click: "Add 5 Test Violations"
 Expected: 5 test violations added
 ```
 
 ### 3. Verify Admin Dashboard
 ```
-URL: https://cbtmo.netlify.app/admin.html
+URL: https://examkita.netlify.app/admin.html
 Tab: "Log Pelanggaran"
 Expected: See violations (from Firebase fallback)
 ```
@@ -156,3 +156,4 @@ Violations display issue fixed dengan menambahkan Firebase fallback. Admin dashb
 **Timestamp**: May 10, 2026
 **Deployed by**: Kiro
 **Commit**: fe98d81
+

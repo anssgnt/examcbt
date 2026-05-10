@@ -13,7 +13,7 @@
 
 ### 1. Verify Deployment ✅
 ```
-URL: https://cbtmo.netlify.app/admin.html
+URL: https://examkita.netlify.app/admin.html
 Tab: "Log Pelanggaran"
 Expected: Should display violations (or 0 if none yet)
 ```
@@ -21,15 +21,15 @@ Expected: Should display violations (or 0 if none yet)
 ### 2. Test Violations Tools ✅
 ```
 A. Check Firebase:
-   https://cbtmo.netlify.app/check-firebase-violations.html
+   https://examkita.netlify.app/check-firebase-violations.html
    Click: "Check Violations"
 
 B. Add Test Violations:
-   https://cbtmo.netlify.app/test-violations.html
+   https://examkita.netlify.app/test-violations.html
    Click: "Add 5 Test Violations"
 
 C. Verify in Admin:
-   https://cbtmo.netlify.app/admin.html
+   https://examkita.netlify.app/admin.html
    Tab: "Log Pelanggaran"
    Should see test violations
 ```
@@ -118,9 +118,9 @@ Based on `PERFORMANCE-ANALYSIS.md`:
 ## Quick Reference
 
 ### Test URLs
-- Admin Dashboard: `https://cbtmo.netlify.app/admin.html`
-- Check Firebase: `https://cbtmo.netlify.app/check-firebase-violations.html`
-- Add Violations: `https://cbtmo.netlify.app/test-violations.html`
+- Admin Dashboard: `https://examkita.netlify.app/admin.html`
+- Check Firebase: `https://examkita.netlify.app/check-firebase-violations.html`
+- Add Violations: `https://examkita.netlify.app/test-violations.html`
 
 ### Key Files
 - `supabase-patch.js` - Firebase fallback logic
@@ -215,3 +215,4 @@ Refer to:
 **Status**: Ready for next phase
 **Timestamp**: May 10, 2026
 **Next Action**: Verify deployment on Netlify
+

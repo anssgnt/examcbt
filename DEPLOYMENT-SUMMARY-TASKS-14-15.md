@@ -92,9 +92,9 @@ e75ebdd - TASK 15: Priority 2 optimization - Lazy load supabase-patch.js
 ✅ **Live on production**
 
 ### Live URLs
-- Main: `https://cbtmo.netlify.app/`
-- Exam: `https://cbtmo.netlify.app/exam.html`
-- Admin: `https://cbtmo.netlify.app/admin.html`
+- Main: `https://examkita.netlify.app/`
+- Exam: `https://examkita.netlify.app/exam.html`
+- Admin: `https://examkita.netlify.app/admin.html`
 
 ---
 
@@ -264,3 +264,4 @@ See `PERFORMANCE-ANALYSIS.md` for:
 **Deployed by**: Kiro
 **Commits**: 38baeab, e75ebdd
 **Status**: ✅ COMPLETE & VERIFIED
+

@@ -24,26 +24,26 @@ fe98d81 - Fix violations display - add Firebase fallback to getAdminLaporanLengk
 - Status: ✅ Auto-deployed
 
 **Live URLs:**
-- Main: `https://cbtmo.netlify.app/`
-- Admin: `https://cbtmo.netlify.app/admin.html`
-- Test Violations: `https://cbtmo.netlify.app/test-violations.html`
-- Check Firebase: `https://cbtmo.netlify.app/check-firebase-violations.html`
+- Main: `https://examkita.netlify.app/`
+- Admin: `https://examkita.netlify.app/admin.html`
+- Test Violations: `https://examkita.netlify.app/test-violations.html`
+- Check Firebase: `https://examkita.netlify.app/check-firebase-violations.html`
 
 ### Verification Checklist
 
 #### 1. Check Deployment Status
 ```bash
 # Check if files are deployed
-curl -I https://cbtmo.netlify.app/supabase-patch.js
-curl -I https://cbtmo.netlify.app/test-violations.html
-curl -I https://cbtmo.netlify.app/check-firebase-violations.html
+curl -I https://examkita.netlify.app/supabase-patch.js
+curl -I https://examkita.netlify.app/test-violations.html
+curl -I https://examkita.netlify.app/check-firebase-violations.html
 ```
 
 Expected: HTTP 200 OK
 
 #### 2. Test Admin Dashboard
 ```
-1. Open: https://cbtmo.netlify.app/admin.html
+1. Open: https://examkita.netlify.app/admin.html
 2. Login with admin credentials
 3. Go to tab: "Log Pelanggaran"
 4. Expected: Should show violations (or 0 if no violations yet)
@@ -52,11 +52,11 @@ Expected: HTTP 200 OK
 
 #### 3. Test Violations Tools
 ```
-1. Open: https://cbtmo.netlify.app/check-firebase-violations.html
+1. Open: https://examkita.netlify.app/check-firebase-violations.html
    - Click "Check Violations"
    - Expected: See violations atau "No violations found"
 
-2. Open: https://cbtmo.netlify.app/test-violations.html
+2. Open: https://examkita.netlify.app/test-violations.html
    - Click "Add 5 Test Violations"
    - Expected: 5 test violations added
    - Check admin dashboard: Should see violations
@@ -132,3 +132,4 @@ git push origin master
 **Status**: ✅ DEPLOYED & READY FOR TESTING
 **Timestamp**: May 10, 2026
 **Deployed by**: Kiro
+

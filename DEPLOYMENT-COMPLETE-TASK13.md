@@ -39,19 +39,19 @@ fe98d81 - Fix violations display - add Firebase fallback to getAdminLaporanLengk
 ### Live URLs
 
 **Main Application:**
-- Admin Dashboard: `https://cbtmo.netlify.app/admin.html`
-- Exam Page: `https://cbtmo.netlify.app/exam.html`
-- Result Page: `https://cbtmo.netlify.app/result.html`
+- Admin Dashboard: `https://examkita.netlify.app/admin.html`
+- Exam Page: `https://examkita.netlify.app/exam.html`
+- Result Page: `https://examkita.netlify.app/result.html`
 
 **Test Tools:**
-- Check Firebase: `https://cbtmo.netlify.app/check-firebase-violations.html`
-- Add Violations: `https://cbtmo.netlify.app/test-violations.html`
+- Check Firebase: `https://examkita.netlify.app/check-firebase-violations.html`
+- Add Violations: `https://examkita.netlify.app/test-violations.html`
 
 ### Verification Steps
 
 #### 1. Quick Test (2 minutes)
 ```
-1. Open: https://cbtmo.netlify.app/admin.html
+1. Open: https://examkita.netlify.app/admin.html
 2. Login with admin credentials
 3. Go to tab: "Log Pelanggaran"
 4. Expected: Should show violations (or 0 if none yet)
@@ -61,17 +61,17 @@ fe98d81 - Fix violations display - add Firebase fallback to getAdminLaporanLengk
 #### 2. Full Test (5 minutes)
 ```
 A. Check Firebase violations:
-   https://cbtmo.netlify.app/check-firebase-violations.html
+   https://examkita.netlify.app/check-firebase-violations.html
    Click: "Check Violations"
    Expected: See violations atau "No violations found"
 
 B. Add test violations:
-   https://cbtmo.netlify.app/test-violations.html
+   https://examkita.netlify.app/test-violations.html
    Click: "Add 5 Test Violations"
    Expected: 5 violations added
 
 C. Verify in admin:
-   https://cbtmo.netlify.app/admin.html
+   https://examkita.netlify.app/admin.html
    Tab: "Log Pelanggaran"
    Expected: See test violations
 ```
@@ -224,3 +224,4 @@ Violations display issue fixed and deployed to Netlify. Admin dashboard now disp
 **Deployed by**: Kiro
 **Commit**: 4c50419
 **Status**: ✅ COMPLETE & VERIFIED
+
