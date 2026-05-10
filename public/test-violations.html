@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Violations</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        .log { border: 1px solid #ccc; padding: 10px; margin-top: 10px; height: 300px; overflow-y: auto; background: #f5f5f5; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Test Violations Tracking</h1>
+    
+    <div>
+        <button onclick="addTestViolation()">Add 1 Test Violation</button>
+        <button onclick="addMultipleViolations()">Add 5 Test Violations</button>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+    
+    <div class="log" id="log"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDvKvKvKvKvKvKvKvKvKvKvKvKvKvKvKvKvKv",
+            authDomain: "cbtmo-firebase.firebaseapp.com",
+            databaseURL: "https://cbtmo-firebase.firebaseio.com",
+            projectId: "cbtmo-firebase",
+            storageBucket: "cbtmo-firebase.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdefghijklmnop"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        function log(msg, isError = false) {
+            const logEl = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            const className = isError ? 'error' : 'success';
+            logEl.innerHTML += `<div class="${className}">[${time}] ${msg}</div>`;
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        async function addTestViolation() {
+            try {
+                const violation = {
+                    waktu: new Date().toLocaleString('id-ID'),
+                    nama: 'Siswa Test ' + Math.floor(Math.random() * 1000),
+                    kelas: '12 IPA 1',
+                    userId: 'test_user_' + Date.now(),
+                    ujian: 'Ujian Matematika',
+                    examId: 'exam_001',
+                    tipe: 'Keluar Layar/Ganti Tab',
+                    timestamp: new Date().toISOString()
+                };
+
+                await db.ref('/pelanggaran').push(violation);
+                log(`✅ Violation added: ${violation.nama}`, false);
+                
+                // Try to sync to Supabase
+                try {
+                    const response = await fetch(
+                        'https://dmydinmosdxazypwdbed.supabase.co/functions/v1/sync-violations',
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRteWRpbm1vc2R4YXp5cGR3YmVkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNTIxNjMsImV4cCI6MjA5MzcyODE2M30.mKY-dQDf3_1_GjNOtCYfsXF0o6qazPpq2ncuvfuGfu8'
+                            },
+                            body: JSON.stringify({ violations: [violation] })
+                        }
+                    );
+                    if (response.ok) {
+                        log(`✅ Synced to Supabase`, false);
+                    } else {
+                        log(`⚠️ Supabase sync failed: ${response.status}`, true);
+                    }
+                } catch (e) {
+                    log(`⚠️ Supabase sync error: ${e.message}`, true);
+                }
+            } catch (e) {
+                log(`❌ Error: ${e.message}`, true);
+            }
+        }
+
+        async function addMultipleViolations() {
+            for (let i = 0; i < 5; i++) {
+                await addTestViolation();
+                await new Promise(r => setTimeout(r, 500));
+            }
+        }
+    </script>
+</body>
+</html>

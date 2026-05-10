@@ -865,6 +865,20 @@
                   let hData = supH.success ? supH.data : [];
                   let pData = supP.success ? supP.data : [];
                   console.log('📊 [supabase-patch] getAdminLaporanLengkap - pData length:', pData.length);
+                  
+                  // ✅ FIX: Jika Supabase kosong, baca dari Firebase juga
+                  if (pData.length === 0) {
+                      try {
+                          const fbPelRef = db.ref('/pelanggaran');
+                          const fbPelSnap = await fbPelRef.once('value');
+                          const fbPelData = fbPelSnap.val() || {};
+                          const fbPelArray = Object.values(fbPelData);
+                          console.log('📊 [supabase-patch] Firebase pelanggaran:', fbPelArray.length, 'items');
+                          pData = [...pData, ...fbPelArray];
+                      } catch (e) {
+                          console.warn('[supabase-patch] Error reading Firebase pelanggaran:', e);
+                      }
+                  }
                   const jadwalMap = {};
                   if (supJ.success) supJ.data.forEach(j => { jadwalMap[j.id] = j; });
 
