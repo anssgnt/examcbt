@@ -1,0 +1,248 @@
+/* lazy-loading.css - Lazy Loading Styles */
+
+/* ============================================================================
+   IMAGE LOADING STATES
+   ============================================================================ */
+
+/* Placeholder for images being loaded */
+img[data-src] {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading-shimmer 1.5s infinite;
+  min-height: 200px;
+  display: block;
+}
+
+@keyframes loading-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Loaded images */
+img.lazy-loaded {
+  animation: fade-in 0.3s ease-in-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Failed images */
+img.image-error {
+  display: none;
+}
+
+/* ============================================================================
+   IMAGE CONTAINERS
+   ============================================================================ */
+
+.question-image-container {
+  margin: 12px 0;
+  text-align: center;
+  min-height: 50px;
+}
+
+.question-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.option-image-container {
+  margin-top: 4px;
+  text-align: center;
+}
+
+.option-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  max-height: 150px;
+}
+
+/* ============================================================================
+   IMAGE PLACEHOLDER
+   ============================================================================ */
+
+.image-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 200px;
+  background: linear-gradient(135deg, #f5f5f5 0%, #efefef 100%);
+  border: 2px dashed #ddd;
+  border-radius: 4px;
+  color: #999;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* ============================================================================
+   LOADING INDICATOR
+   ============================================================================ */
+
+.image-loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.image-loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ============================================================================
+   RESPONSIVE IMAGES
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .question-image {
+    max-width: 100%;
+    max-height: 300px;
+  }
+
+  .option-image {
+    max-height: 120px;
+  }
+
+  .image-placeholder {
+    min-height: 150px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .question-image {
+    max-height: 250px;
+  }
+
+  .option-image {
+    max-height: 100px;
+  }
+
+  .image-placeholder {
+    min-height: 120px;
+    font-size: 11px;
+  }
+}
+
+/* ============================================================================
+   ACCESSIBILITY
+   ============================================================================ */
+
+/* Ensure images are accessible */
+img {
+  display: block;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+  .image-placeholder {
+    border-color: #000;
+    color: #000;
+  }
+
+  img.image-error {
+    border: 2px solid #000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  img.lazy-loaded {
+    animation: none;
+  }
+
+  img[data-src] {
+    animation: none;
+    background: #f0f0f0;
+  }
+
+  .image-loading::after {
+    animation: none;
+  }
+}
+
+/* ============================================================================
+   DARK MODE SUPPORT
+   ============================================================================ */
+
+@media (prefers-color-scheme: dark) {
+  img[data-src] {
+    background: linear-gradient(90deg, #333 25%, #444 50%, #333 75%);
+  }
+
+  .image-placeholder {
+    background: linear-gradient(135deg, #2a2a2a 0%, #1f1f1f 100%);
+    border-color: #444;
+    color: #666;
+  }
+}
+
+/* ============================================================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================================================ */
+
+/* Use will-change for images that will be animated */
+img.lazy-loaded {
+  will-change: opacity;
+}
+
+/* Optimize for GPU rendering */
+.question-image-container,
+.option-image-container {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* ============================================================================
+   PRINT STYLES
+   ============================================================================ */
+
+@media print {
+  img[data-src] {
+    display: none;
+  }
+
+  .image-placeholder {
+    display: none;
+  }
+
+  img.lazy-loaded {
+    page-break-inside: avoid;
+  }
+}
