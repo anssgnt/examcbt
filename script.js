@@ -511,23 +511,33 @@ document.addEventListener('copy', e => e.preventDefault());
 document.addEventListener('paste', e => e.preventDefault());
 
 // ✅ FIX: Initialize Firebase/Supabase safely
-let db = null;
-let auth = null;
+var db = window.db || null;
+var auth = null;
 
 // Try Firebase if available (for backward compatibility)
-if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length > 0) {
-  try {
-    db = firebase.database();
-    auth = firebase.auth();
-    console.log('[Script] Firebase initialized');
-  } catch (e) {
-    console.warn('[Script] Firebase not available:', e.message);
+if (typeof firebase !== 'undefined') {
+  if (firebase.apps && firebase.apps.length > 0) {
+    try {
+      db = db || firebase.database();
+      auth = firebase.auth();
+      console.log('[Script] Firebase initialized');
+    } catch (e) {
+      console.warn('[Script] Firebase not available:', e.message);
+    }
+  } else if (typeof firebase.auth === 'function') {
+    try {
+      auth = firebase.auth();
+    } catch(e) {}
   }
 }
 
 // If Firebase not available, use Supabase mock (will be injected by supabase-patch.js)
 if (!db) {
-  console.log('[Script] Waiting for Supabase patch to inject db...');
+  console.log('[Script] Falling back to Supabase injected db...');
+  db = window.db;
+}
+if (!auth && typeof window.firebase !== 'undefined' && typeof window.firebase.auth === 'function') {
+  auth = window.firebase.auth();
 }
 
 /* ================================
