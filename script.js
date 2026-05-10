@@ -162,6 +162,11 @@ window.checkAndEnforcePwa = checkAndEnforcePwa;
 // Global initialization for School Identity
 async function initSchoolIdentity() {
   try {
+    // Guard: ensure db is ready
+    if (!db || !db.ref) {
+      console.warn("initSchoolIdentity: db not ready yet, skipping");
+      return;
+    }
     const idenSnap = await db.ref('/config/identity').once('value');
     const iden = idenSnap.val();
     if (iden) applySchoolIdentity(iden);
@@ -533,8 +538,19 @@ if (typeof firebase !== 'undefined') {
 
 // If Firebase not available, use Supabase mock (will be injected by supabase-patch.js)
 if (!db) {
-  console.log('[Script] Falling back to Supabase injected db...');
-  db = window.db;
+  console.log('[Script] Waiting for Supabase injected db...');
+  let waitCount = 0;
+  const waitForDb = setInterval(() => {
+    if (window.db && window.db.ref) {
+      db = window.db;
+      console.log('[Script] Supabase db injected, db.ref available');
+      clearInterval(waitForDb);
+    } else if (waitCount++ > 50) {
+      console.warn('[Script] Timeout waiting for db, using fallback mock');
+      db = window.db || { ref: () => ({ once: async () => ({ val: () => null, exists: () => false }) }) };
+      clearInterval(waitForDb);
+    }
+  }, 20);
 }
 if (!auth && typeof window.firebase !== 'undefined' && typeof window.firebase.auth === 'function') {
   auth = window.firebase.auth();
@@ -611,6 +627,14 @@ async function loadPesertaCache(force = false) {
       }
     }
   } catch (e) { /* cache rusak, lanjut fetch */ }
+
+  // Guard: ensure db is ready
+  if (!db || !db.ref) {
+    console.warn("loadPesertaCache: db not ready yet, skipping");
+    SystemStatus.peserta = 'pending';
+    updateInitStatusDisplay();
+    return null;
+  }
 
   // Fetch dari Firebase (patched methods handle connection)
   try {
