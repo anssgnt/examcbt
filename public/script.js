@@ -1360,7 +1360,9 @@ function updateInitStatusDisplay() {
 // --- SMART DB CONNECTION MANAGER (HIT & RUN) ---
 // Trik ini membuat Firebase berjalan secara stateless seperti REST API.
 // Sangat vital untuk mem-bypass limit 100 concurrent connection di versi gratis (Spark).
-db.goOffline(); // Matikan koneksi bawaan seketika!
+if (db && typeof db.goOffline === 'function') {
+  db.goOffline(); // Matikan koneksi bawaan seketika!
+}
 
 // activeDbRequests dan dbDisconnectTimer sudah dideklarasikan di atas (dekat dbConnectFast)
 // agar tidak ReferenceError saat loadPesertaCache() dipanggil sebelum blok ini.

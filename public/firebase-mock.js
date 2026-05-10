@@ -7,6 +7,35 @@
 if (typeof window.firebase === 'undefined') {
   console.log('[Firebase Mock] Creating Firebase mock for Supabase patch...');
   
+  // Create mock db object with all required methods
+  const mockDb = {
+    ref: function(path) {
+      return {
+        once: () => Promise.resolve({ val: () => ({}), exists: () => false }),
+        set: () => Promise.resolve(),
+        update: () => Promise.resolve(),
+        remove: () => Promise.resolve(),
+        push: () => ({ key: 'mock_' + Date.now(), set: () => Promise.resolve() }),
+        on: () => {},
+        off: () => {}
+      };
+    },
+    goOffline: function() { console.log('[Firebase Mock] goOffline called'); },
+    goOnline: function() { console.log('[Firebase Mock] goOnline called'); },
+    ServerValue: { TIMESTAMP: Date.now() }
+  };
+  
+  // Create mock auth object
+  const mockAuth = {
+    currentUser: { uid: 'mock_user' },
+    onAuthStateChanged: (cb) => { 
+      setTimeout(() => cb({ uid: 'mock_user' }), 100); 
+      return () => {}; 
+    },
+    signInAnonymously: () => Promise.resolve({ user: { uid: 'mock_user' } })
+  };
+  
+  // Create Firebase namespace
   window.firebase = {
     apps: [],
     initializeApp: function() { 
@@ -14,16 +43,16 @@ if (typeof window.firebase === 'undefined') {
       console.log('[Firebase Mock] initializeApp called');
     },
     database: function() { 
-      return { ref: () => ({}) }; 
+      return mockDb; 
     },
     auth: function() { 
-      return { currentUser: null }; 
+      return mockAuth; 
     }
   };
   
-  // Create placeholder db and auth
-  window.db = { ref: () => ({}) };
-  window.auth = { currentUser: null };
+  // Create global db and auth references
+  window.db = mockDb;
+  window.auth = mockAuth;
   
   console.log('[Firebase Mock] ✅ Firebase mock created');
 }
