@@ -1,0 +1,59 @@
+# Netlify Configuration - Optimize untuk 900 Siswa
+
+[build]
+  command = "echo 'Static site - no build needed'"
+  publish = "."
+
+# 🚨 GZIP COMPRESSION - Reduce bandwidth 70%
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Encoding = "gzip"
+    Cache-Control = "public, max-age=3600"
+
+# Cache static assets aggressively
+[[headers]]
+  for = "/**.{js,css,png,jpg,jpeg,gif,svg,woff,woff2}"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# HTML files - shorter cache
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+# Service Worker - no cache
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# Manifest - short cache
+[[headers]]
+  for = "/manifest.json"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+# 🚨 RATE LIMITING - Prevent 900 siswa overload
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/rate-limit"
+  status = 200
+
+# Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# CORS untuk Supabase
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
