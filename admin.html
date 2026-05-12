@@ -754,6 +754,10 @@
   </div>
 
   <!-- ✅ CRITICAL SCRIPTS (load immediately for dashboard) -->
+  <!-- 🚨 RATE LIMITER + PERFORMANCE MONITOR -->
+  <script defer src="rate-limiter.min.js?v=1"></script>
+  <script defer src="admin-performance-monitor.min.js?v=1"></script>
+  
   <script defer src="supabase-adapter.min.js?v=2"></script>
   <script defer src="firebase-mock.min.js"></script>
   <!-- ✅ FIX: supabase-patch MUST load before admin-core (defer preserves order) -->

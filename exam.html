@@ -173,12 +173,18 @@
   <!-- CRITICAL SCRIPTS (load immediately) -->
   <!-- ============================================ -->
   
+  <!-- 🚨 RATE LIMITER - Load first untuk prevent 900 siswa overload -->
+  <script src="rate-limiter.min.js?v=1" defer></script>
+  <script src="sync-optimizer.min.js?v=1" defer></script>
+  <script src="bandwidth-optimizer.min.js?v=1" defer></script>
+  
   <script src="supabase-adapter.min.js?v=2" defer></script>
   <!-- ✅ Firebase mock (MUST load before supabase-patch.js) -->
   <script src="firebase-mock.min.js" defer></script>
   <script src="supabase-patch.min.js?v=8" defer></script>
   <script src="script.min.js?v=10" defer></script>
   <script src="exam-core.min.js?v=4" defer></script>
+  <script src="mobile-sync-wrapper.min.js?v=1" defer></script>
 
   <!-- ============================================ -->
   <!-- BUGFIX: ENHANCED ANTI-CHEAT OVERRIDE -->

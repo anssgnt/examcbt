@@ -823,6 +823,11 @@
 
 
   <!-- ✅ CRITICAL SCRIPTS (deferred to prevent render block) -->
+  <!-- 🚨 RATE LIMITER - Load first untuk prevent 900 siswa overload -->
+  <script src="rate-limiter.min.js?v=1" defer></script>
+  <script src="sync-optimizer.min.js?v=1" defer></script>
+  <script src="bandwidth-optimizer.min.js?v=1" defer></script>
+  
   <script src="supabase-adapter.min.js?v=2" defer></script>
   <script src="firebase-mock.min.js" defer></script>
   <script src="supabase-patch.min.js?v=8" defer></script>
@@ -834,7 +839,7 @@
   <!-- ✅ Phase 2: Defer non-critical scripts -->
   <script>
     (function() {
-      const DEFERRED = ['queue-system.min.js?v=3', 'pwa-core.min.js?v=4', 'pwa-inline.js'];
+      const DEFERRED = ['queue-system.min.js?v=3', 'pwa-core.min.js?v=4', 'pwa-inline.js', 'mobile-sync-wrapper.min.js?v=1'];
       function load() {
         DEFERRED.forEach(src => {
           const s = document.createElement('script');
