@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Admin Panel - CBT Online</title>
+
+  <!-- ✅ OPTIMIZATION: Split CSS - Load core + admin CSS -->
+  <link rel="stylesheet" href="style-core.min.css?v=2">
+  <link rel="stylesheet" href="style.min.css?v=2">
+  <link rel="stylesheet" href="style-admin.min.css?v=2">
+  <link rel="stylesheet" href="style-modals.min.css?v=2">
+
+</head>
+
+<body oncontextmenu="return false;" class="admin-page">
+
+  <!-- ══════════════════════════════════════
+     ADMIN LOGIN (if not authenticated)
+  ══════════════════════════════════════ -->
+   <div id="admin-login-view" class="view admin-login-layout" style="display:none;">
+    <div class="admin-login-card">
+      <div class="admin-login-icon">
+        <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+      </div>
+      <h2>Admin Panel</h2>
+      <p>Masukkan password proktor untuk melanjutkan</p>
+      <input type="password" id="adminTokenInput" class="form-control" placeholder="Password Proktor" style="text-align:center;font-size:1.1rem;padding:14px;margin-bottom:16px;">
+      <button id="btnSubmitAdmin" class="btn btn-primary btn-block">Masuk</button>
+      <button class="btn btn-outline btn-block" style="margin-top:8px;" onclick="window.location.href='index.html'">Kembali ke Halaman Utama</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     ADMIN DASHBOARD
+  ══════════════════════════════════════ -->
+  <div id="admin-dash-view" class="admin-layout" style="display:none;">
+
+    <!-- Sidebar -->
+    <div class="admin-sidebar">
+      <div class="admin-sidebar-header">
+        <div class="admin-sidebar-logo">
+          <svg width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+          </svg>
+        </div>
+        <div>
+          <h3>Admin Panel</h3>
+          <p id="admin-sync-count-sidebar" style="font-size:0.7rem;">Sync: 0</p>
+        </div>
+      </div>
+      <div class="admin-sidebar-nav">
+        <button class="admin-sidebar-btn active" data-tab="tab-dashboard">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          Dashboard
+        </button>
+        <button class="admin-sidebar-btn" data-tab="tab-monitoring">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+          Monitoring
+        </button>
+        <button class="admin-sidebar-btn" data-tab="tab-jadwal">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+          Jadwal
+        </button>
+        <button class="admin-sidebar-btn" data-tab="tab-siswa">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+          Siswa
+        </button>
+        <button class="admin-sidebar-btn" data-tab="tab-soal">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          Bank Soal
+        </button>
+        <button class="admin-sidebar-btn" data-tab="tab-hasil">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          Hasil
+        </button>
+        <button class="admin-sidebar-btn" data-tab="tab-settings">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M10.325 4.317c.426-1.616 2.924-1.616 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          Pengaturan
+        </button>
+      </div>
+      <div class="admin-sidebar-footer">
+        <button class="btn btn-primary btn-block" style="margin-bottom:10px;" onclick="openGuideModal()">Panduan</button>
+        <button class="btn btn-outline btn-block" onclick="logoutAdmin()">Keluar</button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="admin-main">
+      <div class="admin-header">
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          <h2 id="admin-page-title" style="margin:0;">Dashboard</h2>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <span style="font-size:0.75rem;color:var(--text-muted);">Status:</span>
+            <span class="badge" style="background:#E0F2FE;color:#0369A1;border:1px solid #BAE6FD;">Panel Admin</span>
+            <span id="admin-last-refresh" style="font-size:0.75rem;color:var(--text-muted);">Belum diperbarui</span>
+          </div>
+        </div>
+        <div class="admin-header-actions">
+          <button class="btn btn-outline" onclick="forceRefreshAdminTab()">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      <div class="admin-content">
+
+        <!-- Tab: Dashboard -->
+        <div id="tab-dashboard" class="admin-tab-content" style="display:flex;">
+          <div style="width:100%;display:flex;flex-direction:column;gap:16px;">
+
+            <!-- KPI Row -->
+            <div class="admin-card admin-card-gradient" style="padding:18px;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;">
+                <div>
+                  <h3 style="margin:0;font-size:1rem;">Ringkasan Cepat</h3>
+                  <p style="margin:4px 0 0;font-size:0.8rem;color:var(--text-muted);">Pantau status ujian, peserta, dan pelanggaran dalam satu layar.</p>
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                  <button class="btn btn-primary" onclick="openJadwalModal()">+ Jadwal</button>
+                  <button class="btn btn-outline" onclick="openSiswaModal()">+ Siswa</button>
+                  <button class="btn btn-outline" onclick="openImportModal('soal')">Import Soal</button>
+                  <button class="btn btn-outline" onclick="openImportModal('siswa')">Import Siswa</button>
+                </div>
+              </div>
+
+              <div class="admin-kpi-grid" style="margin-top:16px;">
+                <div class="admin-kpi-card admin-kpi-primary">
+                  <div class="admin-kpi-top">
+                    <div class="admin-kpi-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 010 7.75"/>
+                      </svg>
+                    </div>
+                    <div class="admin-kpi-label">Total Peserta</div>
+                  </div>
+                  <div id="sum-total-peserta" class="admin-kpi-value">0</div>
+                </div>
+                <div class="admin-kpi-card admin-kpi-success">
+                  <div class="admin-kpi-top">
+                    <div class="admin-kpi-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 6L9 17l-5-5"/>
+                      </svg>
+                    </div>
+                    <div class="admin-kpi-label">Selesai Ujian</div>
+                  </div>
+                  <div id="sum-persen-selesai" class="admin-kpi-value">0%</div>
+                </div>
+                <div class="admin-kpi-card admin-kpi-info">
+                  <div class="admin-kpi-top">
+                    <div class="admin-kpi-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 3v18h18"/>
+                        <path d="M7 14l3-3 3 2 5-6"/>
+                      </svg>
+                    </div>
+                    <div class="admin-kpi-label">Rata-rata Nilai</div>
+                  </div>
+                  <div id="sum-rata-nilai" class="admin-kpi-value">0</div>
+                </div>
+                <div class="admin-kpi-card admin-kpi-danger">
+                  <div class="admin-kpi-top">
+                    <div class="admin-kpi-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 9v4"/>
+                        <path d="M12 17h.01"/>
+                        <path d="M10.29 3.86l-8.5 14.5A2 2 0 003.5 21h17a2 2 0 001.71-2.64l-8.5-14.5a2 2 0 00-3.42 0z"/>
+                      </svg>
+                    </div>
+                    <div class="admin-kpi-label">Pelanggaran Aktif</div>
+                  </div>
+                  <div id="sum-pelanggaran-aktif" class="admin-kpi-value">0</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Two Columns: Broadcast + Token -->
+            <div style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:16px;align-items:start;">
+              <div class="admin-card">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+                  <h3 style="margin:0;font-size:1rem;">Broadcast Pesan</h3>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <span style="font-size:0.75rem;color:var(--text-muted);">Sync</span>
+                    <span id="admin-sync-count" class="badge admin-badge-soft-success">Sync: 0</span>
+                    <button class="btn btn-outline" onclick="loadAdminDashboard()" style="padding:6px 12px;font-size:0.8rem;">🔄 Refresh</button>
+                  </div>
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
+                  <select id="bc-kelas" class="form-control" style="width:160px;">
+                    <option value="all">Semua Kelas</option>
+                  </select>
+                  <select id="bc-status" class="form-control" style="width:160px;">
+                    <option value="all">Semua Status</option>
+                    <option value="online">Online</option>
+                    <option value="offline">Offline</option>
+                  </select>
+                  <input type="text" id="bc-pesan" class="form-control" placeholder="Tulis pesan broadcast..." style="flex:1;min-width:220px;">
+                  <button class="btn btn-primary" onclick="sendBroadcast()">Kirim</button>
+                </div>
+                <div style="margin-top:12px;padding:12px;border:1px dashed #E5E7EB;border-radius:12px;background:#F9FAFB;font-size:0.8rem;color:var(--text-muted);">
+                  Tips: gunakan status <strong>Online</strong> untuk instruksi mendadak, dan <strong>Offline</strong> untuk pengingat sinkron.
+                </div>
+              </div>
+
+              <div class="admin-card">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+                  <h3 style="margin:0;font-size:1rem;">Token Ujian Aktif</h3>
+                  <button class="btn btn-outline" style="padding:6px 10px;font-size:0.8rem;" onclick="loadAdminDashboard()">🔄</button>
+                </div>
+                <div id="admin-token-list" style="display:flex;flex-direction:column;gap:8px;margin-top:12px;"></div>
+              </div>
+            </div>
+
+            <!-- Navigation Cards -->
+            <div class="admin-card">
+              <h3 style="margin:0 0 12px 0;font-size:1rem;">Navigasi Cepat</h3>
+              <div style="display:grid;grid-template-columns:repeat(4, minmax(0,1fr));gap:12px;">
+                <button class="btn btn-outline" onclick="document.querySelector('[data-tab=tab-monitoring]').click()" style="text-align:left;padding:14px;">
+                  <div style="font-weight:800;">Monitoring</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">Online, progress, absensi</div>
+                </button>
+                <button class="btn btn-outline" onclick="document.querySelector('[data-tab=tab-jadwal]').click()" style="text-align:left;padding:14px;">
+                  <div style="font-weight:800;">Jadwal</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">Token, waktu, aktif</div>
+                </button>
+                <button class="btn btn-outline" onclick="document.querySelector('[data-tab=tab-siswa]').click()" style="text-align:left;padding:14px;">
+                  <div style="font-weight:800;">Siswa</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">CRUD & import</div>
+                </button>
+                <button class="btn btn-outline" onclick="document.querySelector('[data-tab=tab-hasil]').click()" style="text-align:left;padding:14px;">
+                  <div style="font-weight:800;">Hasil</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">Radar & detail nilai</div>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Tab: Monitoring -->
+        <div id="tab-monitoring" class="admin-tab-content" style="display:none;">
+          <div class="admin-card" style="margin-bottom:16px;">
+            <div style="display:flex;gap:15px;align-items:center;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <input type="checkbox" id="chkAbsenMode" style="width:18px;height:18px;" onchange="renderAdminDashboard()">
+                <label for="chkAbsenMode" style="font-size:0.85rem;font-weight:600;">Mode Absensi</label>
+              </div>
+              <div style="flex:1;min-width:180px;">
+                <input type="text" id="mon-search" class="form-control" placeholder="Cari nama..." oninput="renderAdminDashboard()">
+              </div>
+              <select id="mon-filter-kelas" class="form-control" style="width:140px;" onchange="renderAdminDashboard()">
+                <option value="all">Semua Kelas</option>
+              </select>
+              <select id="mon-filter-status" class="form-control" style="width:180px;" onchange="renderAdminDashboard()">
+                <option value="all">Semua Status</option>
+                <option value="SELESAI">Selesai</option>
+                <option value="MENGERJAKAN">Mengerjakan</option>
+                <option value="BELUM">Belum Mulai</option>
+                <option value="SYNCED">Sudah Sinkron Soal</option>
+                <option value="NOT_SYNCED">Belum Sinkron Soal</option>
+              </select>
+            </div>
+          </div>
+          <div id="admin-monitoring-list" style="display:flex;flex-direction:column;gap:16px;"></div>
+        </div>
+
+        <!-- Tab: Jadwal -->
+        <div id="tab-jadwal" class="admin-tab-content" style="display:none;">
+          <div class="admin-card" style="margin-bottom:16px;">
+            <button class="btn btn-primary" onclick="openJadwalModal()">+ Tambah Jadwal</button>
+          </div>
+          <div class="admin-card">
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Nama Ujian</th>
+                    <th>Waktu</th>
+                    <th>Status & Token</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-jadwal-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Siswa -->
+        <div id="tab-siswa" class="admin-tab-content" style="display:none;">
+          <div class="admin-card" style="margin-bottom:16px;display:flex;gap:10px;">
+            <button class="btn btn-primary" onclick="openSiswaModal()">+ Tambah Siswa</button>
+            <button class="btn btn-outline" onclick="openImportModal('siswa')">Import Excel</button>
+            <button class="btn btn-outline" onclick="currentImportType='siswa'; downloadTemplateExcel()">Template</button>
+          </div>
+          <div class="admin-card">
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nama</th>
+                    <th>Kelas</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-siswa-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Bank Soal -->
+        <div id="tab-soal" class="admin-tab-content" style="display:none;">
+          <div class="admin-card" style="margin-bottom:16px;display:flex;gap:10px;">
+            <button class="btn btn-primary" onclick="openImportModal('soal')">Import Soal Excel</button>
+            <button class="btn btn-outline" onclick="currentImportType='soal'; downloadTemplateExcel()">Template</button>
+          </div>
+          <div class="admin-card">
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Bank Soal</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-soal-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab: Hasil -->
+        <div id="tab-hasil" class="admin-tab-content" style="display:none;">
+          <div class="admin-card" style="margin-bottom:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <input type="text" id="admin-hasil-search" class="form-control" placeholder="Cari nama/kelas..." style="flex:1;min-width:180px;" oninput="loadAdminHasil(true)">
+            <button class="btn btn-primary" id="btn-regrade-all" onclick="reGradeAllHasil()" style="white-space:nowrap;display:flex;align-items:center;gap:6px;">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              Hitung Ulang Nilai
+            </button>
+            <button class="btn btn-outline" onclick="showCetakModal()" style="white-space:nowrap;display:flex;align-items:center;gap:6px;border-color:#6366f1;color:#6366f1;">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm1-4h.01"/></svg>
+              Cetak Nilai
+            </button>
+          </div>
+          <div class="admin-card">
+            <h3 style="margin:0 0 12px 0;font-size:0.95rem;">Log Pelanggaran</h3>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Waktu</th>
+                    <th>Nama</th>
+                    <th>Kelas</th>
+                    <th>Ujian</th>
+                    <th>Tipe</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-radar-tbody"></tbody>
+              </table>
+            </div>
+            <div id="admin-radar-pagination"></div>
+          </div>
+          <div class="admin-card" style="margin-top:16px;">
+            <h3 style="margin:0 0 12px 0;font-size:0.95rem;">Detail Hasil</h3>
+            <div class="table-responsive">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Waktu</th>
+                    <th>Nama</th>
+                    <th>Ujian</th>
+                    <th>Nilai</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-hasil-tbody"></tbody>
+              </table>
+            </div>
+            <div id="admin-hasil-pagination"></div>
+          </div>
+        </div>
+
+        <!-- Tab: Settings -->
+        <div id="tab-settings" class="admin-tab-content" style="display:none;">
+          <div class="settings-row">
+            <!-- Col 1: Identity & Security -->
+            <div class="settings-group">
+              <div class="admin-card">
+                <h3 style="margin:0 0 20px 0;font-size:1.05rem;display:flex;align-items:center;gap:10px;">
+                  <span style="background:#DBEAFE;color:#2563EB;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;">🏫</span>
+                  Identitas Sekolah
+                </h3>
+                <div style="display:flex;flex-direction:column;gap:16px;">
+                  <div>
+                    <label class="form-label">Nama Sekolah</label>
+                    <input type="text" id="cfgSchoolName" class="form-control" placeholder="SMP NEGERI 1 DANDER">
+                  </div>
+                  <div>
+                    <label class="form-label">Subjudul</label>
+                    <input type="text" id="cfgSchoolSub" class="form-control" placeholder="Computer Based Portal v.2">
+                  </div>
+                  <div>
+                    <label class="form-label">Logo Sekolah</label>
+                    <div style="display:flex;gap:16px;align-items:center;">
+                      <div id="cfgLogoPreview" style="width:80px;height:80px;border:2px dashed #E5E7EB;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#F9FAFB;overflow:hidden;flex-shrink:0;">
+                        <span style="font-size:0.65rem;color:#9CA3AF;">No Logo</span>
+                      </div>
+                      <div style="flex:1;">
+                        <input type="file" id="cfgLogoInput" accept="image/*" style="display:none;">
+                        <button class="btn btn-outline btn-block" style="font-size:0.85rem;" onclick="document.getElementById('cfgLogoInput').click()">Pilih Foto...</button>
+                        <p style="margin:6px 0 0;font-size:0.7rem;color:#6B7280;">Format: PNG/JPG (Maks 1MB)</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="margin-top:16px;">
+                    <label class="form-label">Ikon Aplikasi (PWA)</label>
+                    <div style="display:flex;gap:16px;align-items:center;">
+                      <div id="cfgIconPreview" style="width:80px;height:80px;border:2px dashed #E5E7EB;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#F9FAFB;overflow:hidden;flex-shrink:0;">
+                        <span style="font-size:0.65rem;color:#9CA3AF;">No Icon</span>
+                      </div>
+                      <div style="flex:1;">
+                        <input type="file" id="cfgIconInput" accept="image/png" style="display:none;">
+                        <button class="btn btn-outline btn-block" style="font-size:0.85rem;" onclick="document.getElementById('cfgIconInput').click()">Pilih Ikon...</button>
+                        <p style="margin:6px 0 0;font-size:0.7rem;color:#6B7280;">Format: PNG 512x512 (Wajib PWA)</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="admin-card">
+                <h3 style="margin:0 0 20px 0;font-size:1.05rem;display:flex;align-items:center;gap:10px;">
+                  <span style="background:#FEE2E2;color:#DC2626;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;">🛡️</span>
+                  Keamanan & Fitur
+                </h3>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                  <div class="toggle-item">
+                    <label class="toggle-label" for="cfgPWA">Wajib Install PWA</label>
+                    <label class="switch"><input type="checkbox" id="cfgPWA"><span class="slider"></span></label>
+                  </div>
+                  <div class="toggle-item">
+                    <label class="toggle-label" for="cfgFullscreen">Fullscreen Mode</label>
+                    <label class="switch"><input type="checkbox" id="cfgFullscreen"><span class="slider"></span></label>
+                  </div>
+                  <div class="toggle-item">
+                    <label class="toggle-label" for="cfgAntiCheat">Anti Cheat</label>
+                    <label class="switch"><input type="checkbox" id="cfgAntiCheat"><span class="slider"></span></label>
+                  </div>
+                  <div class="toggle-item">
+                    <label class="toggle-label" for="cfgShowExamStatus">Tampilkan Status Ujian</label>
+                    <label class="switch"><input type="checkbox" id="cfgShowExamStatus" checked><span class="slider"></span></label>
+                  </div>
+                  <div class="toggle-item">
+                    <label class="toggle-label" for="cfgShowSyncBadge">Tampilkan Badge Sync</label>
+                    <label class="switch"><input type="checkbox" id="cfgShowSyncBadge" checked><span class="slider"></span></label>
+                  </div>
+                  <div style="margin-top:8px;">
+                    <label class="form-label">Min. Waktu Pengerjaan (menit)</label>
+                    <input type="number" id="cfgMinTime" class="form-control" value="0" min="0">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Col 2: Firebase & System -->
+            <div class="settings-group">
+              <div class="admin-card">
+                <h3 style="margin:0 0 20px 0;font-size:1.05rem;display:flex;align-items:center;gap:10px;">
+                  <span style="background:#F3E8FF;color:#9333EA;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;">🔑</span>
+                  Akses Tambahan
+                </h3>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                  <div>
+                    <label class="form-label">Bypass Code (Proktor)</label>
+                    <input type="text" id="cfgBypassCode" class="form-control" placeholder="KODE RAHASIA">
+                  </div>
+                  <div class="toggle-item">
+                    <label class="toggle-label" for="cfgShowSystemInfo">Tampilkan Info Sistem</label>
+                    <label class="switch"><input type="checkbox" id="cfgShowSystemInfo" checked><span class="slider"></span></label>
+                  </div>
+                </div>
+              </div>
+              
+              <button class="btn btn-primary btn-block" style="padding:16px;font-size:1rem;font-weight:700;box-shadow:0 10px 25px rgba(37, 99, 235, 0.2);" onclick="saveAdminSettings()">
+                💾 Simpan Semua Pengaturan
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+     ADMIN MODALS
+  ══════════════════════════════════════ -->
+
+  <!-- Jadwal Modal -->
+  <div id="jadwal-overlay" class="modal-overlay" style="display:none;"></div>
+  <div id="jadwal-modal" class="modal-card" style="display:none;">
+    <h3 id="jadwal-modal-title" style="margin:0 0 16px 0;font-size:1.1rem;">Buat Jadwal Baru</h3>
+    <div style="display:flex;flex-direction:column;gap:12px;max-height:70vh;overflow-y:auto;">
+      <div><label class="form-label">Kode Ujian (ID)</label><input type="text" id="jId" class="form-control" placeholder="Contoh: UH-MAT-9"></div>
+      <div><label class="form-label">Nama Ujian</label><input type="text" id="jNama" class="form-control"></div>
+      <div><label class="form-label">Bank Soal</label><select id="jSoal" class="form-control"></select></div>
+      <div style="display:flex;gap:10px;">
+        <div style="flex:1;"><label class="form-label">Durasi (menit)</label><input type="number" id="jDurasi" class="form-control" value="60"></div>
+        <div style="flex:1;"><label class="form-label">Min. Selesai (menit)</label><input type="number" id="jMinSelesai" class="form-control" value="0"></div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <div style="flex:1;"><label class="form-label">Mulai</label><input type="datetime-local" id="jMulai" class="form-control"></div>
+        <div style="flex:1;"><label class="form-label">Selesai</label><input type="datetime-local" id="jSelesai" class="form-control"></div>
+      </div>
+      <div><label class="form-label">Target Kelas (koma pemisah)</label><input type="text" id="jKelas" class="form-control" placeholder="7A, 7B, 8A"></div>
+      <div><label class="form-label">Token</label><input type="text" id="jToken" class="form-control" style="text-transform:uppercase;text-align:center;letter-spacing:2px;font-weight:700;"></div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="toggle-item"><label class="toggle-label" for="jShuffleSoal">Acak Soal</label><input type="checkbox" id="jShuffleSoal" class="toggle-input" checked></div>
+        <div class="toggle-item"><label class="toggle-label" for="jShuffleOpsi">Acak Opsi</label><input type="checkbox" id="jShuffleOpsi" class="toggle-input" checked></div>
+        <div class="toggle-item"><label class="toggle-label" for="jAktif">Aktif</label><input type="checkbox" id="jAktif" class="toggle-input" checked></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button class="btn btn-outline" style="flex:1;" onclick="closeJadwalModal()">Batal</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="saveJadwal()">Simpan</button>
+    </div>
+  </div>
+
+  <!-- Siswa Modal -->
+  <div id="siswa-overlay" class="modal-overlay" style="display:none;"></div>
+  <div id="siswa-modal" class="modal-card" style="display:none;">
+    <h3 id="siswa-modal-title" style="margin:0 0 16px 0;font-size:1.1rem;">Tambah Siswa</h3>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div><label class="form-label">ID/NIS</label><input type="text" id="siswaIdInput" class="form-control"></div>
+      <div><label class="form-label">Nama</label><input type="text" id="siswaNamaInput" class="form-control"></div>
+      <div><label class="form-label">Kelas</label><input type="text" id="siswaKelasInput" class="form-control"></div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button class="btn btn-outline" style="flex:1;" onclick="closeSiswaModal()">Batal</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="saveSiswa()">Simpan</button>
+    </div>
+  </div>
+
+  <!-- Broadcast Modal -->
+  <div id="broadcast-overlay" class="modal-overlay" style="display:none;"></div>
+  <div id="broadcast-modal" class="modal-card" style="display:none;">
+    <div style="text-align:center;padding:10px 0;">
+      <div style="font-size:2rem;margin-bottom:8px;">📢</div>
+      <h3 style="margin:0 0 8px 0;">Pengumuman dari Proktor</h3>
+      <p id="broadcast-text" style="font-size:0.9rem;color:var(--text-muted);margin:0 0 16px 0;white-space:pre-wrap;"></p>
+    </div>
+    <button class="btn btn-primary btn-block" onclick="closeBroadcastModal()">Saya Mengerti</button>
+  </div>
+
+  <!-- Analisis Modal -->
+  <div id="analisis-overlay" class="modal-overlay" style="display:none;"></div>
+  <div id="analisis-modal" class="modal-card" style="display:none;">
+    <h3 id="analisis-modal-title" style="margin:0 0 16px 0;font-size:1.1rem;">Analisis Soal</h3>
+    <div id="analisis-content" style="max-height:70vh;overflow-y:auto;"></div>
+    <button class="btn btn-outline btn-block" style="margin-top:16px;" onclick="closeAnalisisModal()">Tutup</button>
+  </div>
+
+  <!-- Print Modal -->
+  <div id="print-overlay" class="modal-overlay" style="display:none;"></div>
+  <div id="print-config-modal" class="modal-card" style="display:none;">
+    <h3 style="margin:0 0 16px 0;font-size:1.1rem;">Konfigurasi Cetak</h3>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <input type="hidden" id="printExamId">
+      <input type="hidden" id="printExamName">
+      <div><label class="form-label">Tipe Cetak</label>
+        <select id="printType" class="form-control">
+          <option value="presensi">Berita Acara & Presensi</option>
+          <option value="soal">Naskah Soal</option>
+          <option value="hasil">Laporan Hasil</option>
+        </select>
+      </div>
+      <div><label class="form-label">Filter Kelas</label>
+        <select id="printKelas" class="form-control"><option value="">Semua Kelas</option></select>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <div style="flex:1;"><label class="form-label">Tanggal Ujian</label><input type="date" id="printTanggal" class="form-control"></div>
+        <div style="flex:1;"><label class="form-label">Ruang</label><input type="text" id="printRuang" class="form-control" placeholder="Lab Komputer 1"></div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <div style="flex:1;"><label class="form-label">Jam Mulai</label><input type="time" id="printJamStart" class="form-control"></div>
+        <div style="flex:1;"><label class="form-label">Jam Selesai</label><input type="time" id="printJamEnd" class="form-control"></div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <div style="flex:1;"><label class="form-label">Pengawas</label><input type="text" id="printPengawas" class="form-control" placeholder="Nama Pengawas"></div>
+        <div style="flex:1;"><label class="form-label">Proktor</label><input type="text" id="printProktor" class="form-control" placeholder="Nama Proktor"></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button class="btn btn-outline" style="flex:1;" onclick="closePrintModal()">Batal</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="doPrint()">Cetak</button>
+    </div>
+  </div>
+
+  <!-- Soal Edit Modal -->
+  <div id="soal-edit-overlay" class="modal-overlay" style="display:none;"></div>
+  <div id="soal-edit-modal" class="modal-card" style="display:none;">
+    <h3 id="soal-edit-modal-title" style="margin:0 0 16px 0;font-size:1.1rem;">Edit Soal</h3>
+    <div id="soal-edit-content" style="max-height:70vh;overflow-y:auto;">
+      <input type="hidden" id="soalEditBankId">
+      <input type="hidden" id="soalEditId">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div><label class="form-label">Pertanyaan</label><textarea id="soalEditPertanyaan" class="form-control" rows="4" placeholder="Tulis pertanyaan..."></textarea></div>
+        <div><label class="form-label">Gambar Soal (opsional URL)</label><input type="text" id="soalEditGambar" class="form-control" placeholder="https://..."></div>
+        <div>
+          <label class="form-label">Opsi Jawaban</label>
+          <div id="soalEditOpsiContainer" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+        <div><label class="form-label">Kunci Jawaban</label><select id="soalEditKunci" class="form-control"></select></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button class="btn btn-outline" style="flex:1;" onclick="closeSoalEditModal()">Batal</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="saveSoalEdit()">Simpan</button>
+    </div>
+  </div>
+
+  <!-- Preview Modal -->
+  <div id="preview-overlay" class="modal-overlay" style="display:none;"></div>
+  <div id="admin-preview-modal" class="modal-card" style="display:none;">
+    <h3 style="margin:0 0 4px 0;font-size:1.1rem;">Preview Bank Soal</h3>
+    <p id="preview-title" style="margin:0 0 12px 0;font-size:0.85rem;color:var(--text-muted);">-</p>
+    <div id="preview-content" style="max-height:70vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h4 id="prev-q-number" style="margin:0;font-size:1rem;">SOAL</h4>
+        <span id="prev-q-indicator" style="font-size:0.8rem;color:var(--text-muted);">0 / 0</span>
+      </div>
+      <p id="prev-q-text" style="margin:0;font-size:0.95rem;line-height:1.6;"></p>
+      <div id="prev-q-image-container" style="display:none;"></div>
+      <div id="prev-q-options" style="display:flex;flex-direction:column;gap:8px;"></div>
+      <div style="display:flex;justify-content:space-between;gap:10px;margin-top:8px;">
+        <button id="btnPrevPreview" class="btn btn-outline" onclick="navigatePreview(-1)">Sebelumnya</button>
+        <button id="btnNextPreview" class="btn btn-primary" onclick="navigatePreview(1)">Berikutnya</button>
+      </div>
+    </div>
+    <button class="btn btn-outline btn-block" style="margin-top:16px;" onclick="closePreviewModal()">Tutup</button>
+  </div>
+
+  <!-- Guide Modal -->
+  <div id="guide-overlay" class="modal-overlay" style="display:none;" onclick="closeGuideModal()"></div>
+  <div id="guide-modal" class="modal-card" style="display:none;max-height:80vh;overflow-y:auto;">
+    <h3 style="margin:0 0 16px 0;font-size:1.1rem;">Panduan Admin</h3>
+    <div style="font-size:0.9rem;line-height:1.7;">
+      <ol style="padding-left:20px;margin:0;">
+        <li style="margin-bottom:8px;">Tambah data siswa di tab <strong>Siswa</strong>.</li>
+        <li style="margin-bottom:8px;">Import bank soal di tab <strong>Bank Soal</strong>.</li>
+        <li style="margin-bottom:8px;">Buat jadwal ujian di tab <strong>Jadwal</strong>.</li>
+        <li style="margin-bottom:8px;">Monitor peserta di tab <strong>Monitoring</strong>.</li>
+        <li style="margin-bottom:8px;">Kirim broadcast pesan dari <strong>Dashboard</strong>.</li>
+        <li>Lihat hasil & analisis di tab <strong>Hasil</strong>.</li>
+      </ol>
+    </div>
+    <button class="btn btn-primary btn-block" style="margin-top:20px;" onclick="closeGuideModal()">Saya Mengerti</button>
+  </div>
+
+  <!-- Import Modal -->
+  <div id="import-overlay" class="modal-overlay" style="display:none;" onclick="closeImportModal()"></div>
+  <div id="import-modal" class="modal-card" style="display:none;opacity:0;transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);z-index:1001;">
+    <h3 id="import-title" style="margin:0 0 8px 0;font-size:1.1rem;">Import Data</h3>
+    <p id="import-desc" style="font-size:0.85rem;color:var(--text-muted);margin:0 0 20px 0;line-height:1.5;"></p>
+    
+    <div id="import-extra-inputs" style="display:none;flex-direction:column;gap:8px;margin-bottom:16px;">
+      <label style="font-size:0.8rem;font-weight:600;">Kode Bank Soal:</label>
+      <input type="text" id="importBankId" class="form-control" placeholder="Contoh: BIND-9">
+    </div>
+
+    <div class="form-group">
+      <label style="display:block;padding:20px;border:2px dashed #E2E8F0;border-radius:12px;text-align:center;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='#E2E8F0'">
+        <input type="file" id="importFileInput" style="display:none;" accept=".xlsx, .xls" onchange="handleImportFile(this.files[0])">
+        <div style="font-size:2rem;margin-bottom:8px;">📁</div>
+        <div style="font-size:0.9rem;font-weight:600;color:var(--primary);">Pilih File Excel</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">Klik untuk memilih file .xlsx</div>
+      </label>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button class="btn btn-outline" style="flex:1;" onclick="closeImportModal()">Batal</button>
+    </div>
+  </div>
+
+  <!-- Premium Loading Overlay -->
+  <div id="loading-overlay" class="loading-overlay" style="display:none;">
+    <div class="loader-content-card">
+      <div class="spinner-premium"></div>
+      <p id="loading-overlay-text">Memuat...</p>
+    </div>
+  </div>
+
+  <!-- Custom Alert Modal -->
+  <div id="custom-alert-modal" class="custom-alert-overlay" style="display:none;">
+    <div class="custom-alert-card">
+      <div id="custom-alert-icon" style="font-size:2.5rem;margin-bottom:12px;">⚠️</div>
+      <h3 id="custom-alert-title" style="margin:0 0 8px 0;font-size:1rem;"></h3>
+      <p id="custom-alert-message" style="font-size:0.85rem;color:var(--text-muted);margin:0 0 20px 0;white-space:pre-wrap;line-height:1.5;"></p>
+      <button class="btn btn-primary btn-block" onclick="closeCustomAlert()" style="padding:10px;">OK</button>
+    </div>
+  </div>
+
+  <!-- Hidden Print Document Area -->
+  <div id="print-document-area" style="display:none;background:#fff;padding:20px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:16px;">
+      <img id="pd-logo-img" alt="Logo Sekolah" style="display:none;width:70px;height:70px;object-fit:contain;">
+      <div style="flex:1;text-align:center;">
+        <h2 id="pd-school-name" style="margin:0;font-size:1rem;"></h2>
+        <h3 id="pd-exam-name" style="margin:4px 0;font-size:0.95rem;"></h3>
+        <p id="pd-exam-date" style="margin:0;font-size:0.85rem;"></p>
+      </div>
+      <div style="width:70px;"></div>
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+      <thead>
+        <tr>
+          <th style="border:1px solid #000;padding:8px;">No</th>
+          <th style="border:1px solid #000;padding:8px;">ID</th>
+          <th style="border:1px solid #000;padding:8px;">Nama</th>
+          <th style="border:1px solid #000;padding:8px;">TTD 1</th>
+          <th style="border:1px solid #000;padding:8px;">TTD 2</th>
+        </tr>
+      </thead>
+      <tbody id="print-siswa-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- ✅ CRITICAL SCRIPTS (load immediately for dashboard) -->
+  <script defer src="supabase-adapter.min.js?v=2"></script>
+  <script defer src="firebase-mock.min.js"></script>
+  <!-- ✅ FIX: supabase-patch MUST load before admin-core (defer preserves order) -->
+  <script defer src="supabase-patch.min.js?v=8"></script>
+  <script defer src="script.min.js?v=2"></script>
+  <script defer src="admin-shared.min.js?v=1"></script>
+  <script defer src="admin-core.min.js?v=2"></script>
+
+  <!-- ✅ Phase 2.2: Lazy load admin-import.js and admin-analytics.js on tab click -->
+  <script>
+    (function() {
+      const lazyModules = {
+        'admin-import': { src: 'admin-import.min.js?v=2', loaded: false, tabs: ['tab-siswa', 'tab-soal', 'tab-dashboard'] },
+        'admin-analytics': { src: 'admin-analytics.min.js?v=1', loaded: false, tabs: ['tab-hasil', 'tab-dashboard'] }
+      };
+      
+      function loadModule(name) {
+        const mod = lazyModules[name];
+        if (!mod || mod.loaded) return;
+        mod.loaded = true;
+        const s = document.createElement('script');
+        s.src = mod.src;
+        s.async = true;
+        s.onload = () => console.log('[LazyAdmin] Loaded:', name);
+        s.onerror = () => console.warn('[LazyAdmin] Failed:', name);
+        document.head.appendChild(s);
+      }
+      
+      // Listen for tab clicks
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-tab]');
+        if (!btn) return;
+        const tab = btn.dataset.tab;
+        for (const [name, mod] of Object.entries(lazyModules)) {
+          if (mod.tabs.includes(tab)) loadModule(name);
+        }
+      });
+      
+      // Pre-load on dashboard (most common landing tab)
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          loadModule('admin-import');
+          loadModule('admin-analytics');
+        }, 1500); // 1.5s after page load
+      });
+    })();
+  </script>
+
+  <!-- ══════ MODAL CETAK NILAI ══════ -->
+  <div id="cetak-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);z-index:9000;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#fff;border-radius:16px;padding:28px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,.2);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <h3 style="margin:0;font-size:1rem;font-weight:800;color:#1e293b;">🖨️ Cetak Nilai Ujian</h3>
+        <button onclick="closeCetakModal()" style="background:none;border:none;cursor:pointer;font-size:1.3rem;color:#94a3b8;line-height:1;">✕</button>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div>
+          <label style="font-size:0.8rem;font-weight:700;color:#64748b;display:block;margin-bottom:6px;">PILIH UJIAN</label>
+          <select id="cetak-select-ujian" class="form-control" style="width:100%;">
+            <option value="">-- Pilih Ujian --</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size:0.8rem;font-weight:700;color:#64748b;display:block;margin-bottom:6px;">PILIH KELAS</label>
+          <select id="cetak-select-kelas" class="form-control" style="width:100%;">
+            <option value="semua">Semua Kelas</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:8px;">
+          <button onclick="closeCetakModal()" style="flex:1;padding:12px;border-radius:10px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#64748b;font-weight:700;cursor:pointer;">Batal</button>
+          <button onclick="doCetakNilai()" style="flex:2;padding:12px;border-radius:10px;border:none;background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm1-4h.01"/></svg>
+            Cetak / Simpan PDF
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════ AREA CETAK (tidak dipakai, window baru digunakan) ══════ -->
+  <div id="cetak-print-area" style="display:none;"></div>
+
+  <style>
+    /* Tidak ada @media print di admin.html — cetak dilakukan di window baru */
+  </style>
+</body>
+</html>
