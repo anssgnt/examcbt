@@ -12,9 +12,6 @@
   <link rel="stylesheet" href="style-admin.min.css?v=2" data-lazy-load="admin" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="style-modals.min.css?v=2">
 
-  <!-- ✅ Admin Siswa Delete Functions -->
-  <script src="admin-siswa-delete.min.js?v=1" defer></script>
-
 </head>
 
 <body oncontextmenu="return false;" class="admin-page">
@@ -771,7 +768,6 @@
   <script defer src="admin-performance-monitor.min.js?v=1"></script>
   
   <script defer src="supabase-adapter.min.js?v=2"></script>
-  <script defer src="firebase-mock.min.js"></script>
   <!-- ✅ FIX: supabase-patch MUST load before admin-core (defer preserves order) -->
   <script defer src="supabase-patch.min.js?v=8"></script>
   <!-- ✅ CRITICAL: Load script.min.js BEFORE admin-core (admin-core depends on it) -->
@@ -780,6 +776,9 @@
   <script defer src="cache-sync-manager.min.js?v=1"></script>
   <script defer src="admin-shared.min.js?v=1"></script>
   <script defer src="admin-core.min.js?v=2"></script>
+  
+  <!-- ✅ Admin Siswa Delete Functions -->
+  <script defer src="admin-siswa-delete.min.js?v=1"></script>
 
   <!-- ✅ Phase 2.2: Lazy load admin-import.js and admin-analytics.js on tab click -->
   <script>

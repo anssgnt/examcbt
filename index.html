@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="style-sync.min.css" data-lazy-load="index" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="style-index-modals.min.css" data-lazy-load="index" media="print" onload="this.media='all'">
 
-  <link id="pwa-manifest" rel="manifest" href="">
+  <link id="pwa-manifest" rel="manifest" href="manifest.json">
 
 
 
@@ -462,18 +462,17 @@
 
         <!-- State 2: Siap sinkron (tombol mulai) -->
         <div id="sync-state-ready" class="sync-state-box" style="display:none;">
+          <button id="btnSyncAllSoal" class="btn-confirm sync-btn-main" style="margin-bottom:16px;">
+            <i class="fas fa-download"></i> Mulai Sinkronisasi
+          </button>
           <div class="sync-icon-ready">
             <i class="fas fa-cloud-download-alt"></i>
           </div>
           <h2 class="sync-title">Sinkronisasi Soal</h2>
-          <p class="sync-desc">Seluruh soal ujian akan diunduh ke perangkat Anda untuk keamanan dan kelancaran ujian.</p>
+          <p class="sync-desc">Soal ujian akan diunduh ke perangkat Anda.</p>
           <div id="sync-ready-info" class="sync-info-card">
-            <div class="sync-info-label">📋 INFO UJIAN</div>
             <div id="sync-ready-count" class="sync-info-value">Memuat...</div>
           </div>
-          <button id="btnSyncAllSoal" class="btn-confirm sync-btn-main">
-            <i class="fas fa-download"></i> Mulai Sinkronisasi
-          </button>
         </div>
 
         <!-- State 3: Proses sinkronisasi berjalan -->
@@ -481,18 +480,18 @@
           <div class="sync-icon-progress">
             <i class="fas fa-sync-alt fa-spin"></i>
           </div>
-          <h2 class="sync-title">Mengunduh Soal...</h2>
-          <p class="sync-desc">Jangan tutup atau minimize aplikasi ini</p>
+          <h2 class="sync-title">Mengunduh...</h2>
+          <p class="sync-desc" style="font-size:0.8rem;">Jangan tutup aplikasi</p>
           <div id="sync-all-progress" class="sync-progress-wrap">
             <div class="sync-progress-header">
               <span id="sync-all-text" class="sync-progress-percent">0%</span>
-              <span id="sync-file-label" class="sync-progress-count">0 / 0 soal</span>
+              <span id="sync-file-label" class="sync-progress-count">0 / 0</span>
             </div>
             <div class="sync-progress-track">
               <div id="sync-all-bar" class="sync-progress-bar"></div>
             </div>
           </div>
-          <p id="sync-current-item" class="sync-current-file"></p>
+          <p id="sync-current-item" class="sync-current-file" style="font-size:0.75rem;"></p>
         </div>
 
         <!-- State 4: Selesai sukses -->
@@ -500,20 +499,20 @@
           <div class="sync-icon-done">
             <i class="fas fa-check"></i>
           </div>
-          <h2 class="sync-title-done">Sinkronisasi Selesai!</h2>
-          <p class="sync-desc">Semua soal ujian sudah tersimpan di perangkat Anda dan siap digunakan.</p>
+          <h2 class="sync-title-done">Selesai!</h2>
+          <p class="sync-desc">Soal siap digunakan.</p>
           <button id="btnLanjutUtama" class="btn-confirm sync-btn-success">
-            Ke Halaman Utama <i class="fas fa-arrow-right"></i>
+            Lanjut <i class="fas fa-arrow-right"></i>
           </button>
         </div>
 
         <!-- State 5: Gagal sebagian -->
         <div id="sync-state-error" class="sync-state-box" style="display:none;">
           <div class="sync-icon-error">⚠️</div>
-          <h2 class="sync-title">Sinkronisasi Sebagian</h2>
-          <p id="sync-error-msg" class="sync-desc">Beberapa soal gagal diunduh. Pastikan koneksi internet stabil.</p>
+          <h2 class="sync-title">Gagal Sebagian</h2>
+          <p id="sync-error-msg" class="sync-desc" style="font-size:0.85rem;">Koneksi tidak stabil. Coba lagi.</p>
           <button id="btnRetrySyncAllSoal" class="btn-confirm sync-btn-retry">
-            <i class="fas fa-redo"></i> Ulangi Sinkronisasi
+            <i class="fas fa-redo"></i> Ulangi
           </button>
         </div>
       </div>
@@ -541,7 +540,7 @@
         <div class="mobile-search-card">
           <div class="mobile-search-input-wrap">
             <i class="fas fa-search"></i>
-            <input type="text" id="userName" class="mobile-search-input" placeholder="Ketik nama kamu..." autocomplete="off">
+            <input type="text" id="userName" class="mobile-search-input" placeholder="Ketuk nama ujian..." autocomplete="off">
             <div id="autocomplete-list" class="autocomplete-list"></div>
           </div>
           <button class="mobile-filter-btn" id="mobile-sync-badge-filter">

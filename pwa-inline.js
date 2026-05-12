@@ -31,11 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    const bannerCloseBtn = document.querySelector('button[onclick="document.getElementById(\\'pwa-install-banner\\').style.display=\\'none\\'"]');
+    const bannerCloseBtn = document.querySelector('button[data-close-banner]');
     if (bannerCloseBtn) {
         bannerCloseBtn.removeAttribute('onclick');
         bannerCloseBtn.addEventListener('click', () => {
-            document.getElementById('pwa-install-banner').style.display='none';
+            const banner = document.getElementById('pwa-install-banner');
+            if (banner) banner.style.display = 'none';
         });
     }
 });
