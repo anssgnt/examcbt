@@ -12,6 +12,9 @@
   <link rel="stylesheet" href="style-admin.min.css?v=2" data-lazy-load="admin" media="print" onload="this.media='all'">
   <link rel="stylesheet" href="style-modals.min.css?v=2">
 
+  <!-- ✅ Admin Siswa Delete Functions -->
+  <script src="admin-siswa-delete.min.js?v=1" defer></script>
+
 </head>
 
 <body oncontextmenu="return false;" class="admin-page">
@@ -314,10 +317,16 @@
 
         <!-- Tab: Siswa -->
         <div id="tab-siswa" class="admin-tab-content" style="display:none;">
-          <div class="admin-card" style="margin-bottom:16px;display:flex;gap:10px;">
+          <div class="admin-card" style="margin-bottom:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
             <button class="btn btn-primary" onclick="openSiswaModal()">+ Tambah Siswa</button>
             <button class="btn btn-outline" onclick="openImportModal('siswa')">Import Excel</button>
             <button class="btn btn-outline" onclick="currentImportType='siswa'; downloadTemplateExcel()">Template</button>
+            <div style="flex:1;min-width:200px;"></div>
+            <select id="filter-kelas-delete" class="form-control" style="width:160px;">
+              <option value="">-- Pilih Kelas --</option>
+            </select>
+            <button class="btn btn-outline" style="color:#DC2626;border-color:#FECACA;" onclick="deleteSiswaPerKelas()">🗑️ Hapus Kelas</button>
+            <button class="btn btn-outline" style="color:#DC2626;border-color:#FECACA;" onclick="deleteSiswaSemuanya()">🗑️ Hapus Semua</button>
           </div>
           <div class="admin-card">
             <div class="table-responsive">
