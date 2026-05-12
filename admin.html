@@ -7,10 +7,10 @@
   <title>Admin Panel - CBT Online</title>
 
   <!-- ✅ OPTIMIZATION: Split CSS - Load core + admin CSS -->
-  <link rel="stylesheet" href="style-core.css?v=2">
-  <link rel="stylesheet" href="style.css?v=2">
-  <link rel="stylesheet" href="style-admin.css?v=2">
-  <link rel="stylesheet" href="style-modals.css?v=2">
+  <link rel="stylesheet" href="style-core.min.css?v=2">
+  <link rel="stylesheet" href="style.min.css?v=2">
+  <link rel="stylesheet" href="style-admin.min.css?v=2">
+  <link rel="stylesheet" href="style-modals.min.css?v=2">
 
 </head>
 
@@ -317,7 +317,7 @@
           <div class="admin-card" style="margin-bottom:16px;display:flex;gap:10px;">
             <button class="btn btn-primary" onclick="openSiswaModal()">+ Tambah Siswa</button>
             <button class="btn btn-outline" onclick="openImportModal('siswa')">Import Excel</button>
-            <button class="btn btn-outline" onclick="downloadTemplateExcel()">Template</button>
+            <button class="btn btn-outline" onclick="currentImportType='siswa'; downloadTemplateExcel()">Template</button>
           </div>
           <div class="admin-card">
             <div class="table-responsive">
@@ -340,7 +340,7 @@
         <div id="tab-soal" class="admin-tab-content" style="display:none;">
           <div class="admin-card" style="margin-bottom:16px;display:flex;gap:10px;">
             <button class="btn btn-primary" onclick="openImportModal('soal')">Import Soal Excel</button>
-            <button class="btn btn-outline" onclick="downloadTemplateExcel()">Template</button>
+            <button class="btn btn-outline" onclick="currentImportType='soal'; downloadTemplateExcel()">Template</button>
           </div>
           <div class="admin-card">
             <div class="table-responsive">
@@ -437,6 +437,19 @@
                         <input type="file" id="cfgLogoInput" accept="image/*" style="display:none;">
                         <button class="btn btn-outline btn-block" style="font-size:0.85rem;" onclick="document.getElementById('cfgLogoInput').click()">Pilih Foto...</button>
                         <p style="margin:6px 0 0;font-size:0.7rem;color:#6B7280;">Format: PNG/JPG (Maks 1MB)</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="margin-top:16px;">
+                    <label class="form-label">Ikon Aplikasi (PWA)</label>
+                    <div style="display:flex;gap:16px;align-items:center;">
+                      <div id="cfgIconPreview" style="width:80px;height:80px;border:2px dashed #E5E7EB;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#F9FAFB;overflow:hidden;flex-shrink:0;">
+                        <span style="font-size:0.65rem;color:#9CA3AF;">No Icon</span>
+                      </div>
+                      <div style="flex:1;">
+                        <input type="file" id="cfgIconInput" accept="image/png" style="display:none;">
+                        <button class="btn btn-outline btn-block" style="font-size:0.85rem;" onclick="document.getElementById('cfgIconInput').click()">Pilih Ikon...</button>
+                        <p style="margin:6px 0 0;font-size:0.7rem;color:#6B7280;">Format: PNG 512x512 (Wajib PWA)</p>
                       </div>
                     </div>
                   </div>
@@ -740,24 +753,54 @@
     </table>
   </div>
 
-  <script defer src="supabase-adapter.js?v=2"></script>
-  <!-- ✅ Firebase mock (MUST load before supabase-patch.js) -->
-  <script defer src="firebase-mock.js"></script>
-  <!-- ✅ OPTIMIZATION: Lazy load supabase-patch only on admin page (70 KB saved on exam page) -->
+  <!-- ✅ CRITICAL SCRIPTS (load immediately for dashboard) -->
+  <script defer src="supabase-adapter.min.js?v=2"></script>
+  <script defer src="firebase-mock.min.js"></script>
+  <!-- ✅ FIX: supabase-patch MUST load before admin-core (defer preserves order) -->
+  <script defer src="supabase-patch.min.js?v=8"></script>
+  <script defer src="script.min.js?v=2"></script>
+  <script defer src="admin-shared.min.js?v=1"></script>
+  <script defer src="admin-core.min.js?v=2"></script>
+
+  <!-- ✅ Phase 2.2: Lazy load admin-import.js and admin-analytics.js on tab click -->
   <script>
-    // Load supabase-patch.js asynchronously after page load
-    window.addEventListener('load', () => {
-      const script = document.createElement('script');
-      script.src = 'supabase-patch.js?v=8';
-      script.async = true;
-      document.head.appendChild(script);
-    });
+    (function() {
+      const lazyModules = {
+        'admin-import': { src: 'admin-import.min.js?v=2', loaded: false, tabs: ['tab-siswa', 'tab-soal', 'tab-dashboard'] },
+        'admin-analytics': { src: 'admin-analytics.min.js?v=1', loaded: false, tabs: ['tab-hasil', 'tab-dashboard'] }
+      };
+      
+      function loadModule(name) {
+        const mod = lazyModules[name];
+        if (!mod || mod.loaded) return;
+        mod.loaded = true;
+        const s = document.createElement('script');
+        s.src = mod.src;
+        s.async = true;
+        s.onload = () => console.log('[LazyAdmin] Loaded:', name);
+        s.onerror = () => console.warn('[LazyAdmin] Failed:', name);
+        document.head.appendChild(s);
+      }
+      
+      // Listen for tab clicks
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-tab]');
+        if (!btn) return;
+        const tab = btn.dataset.tab;
+        for (const [name, mod] of Object.entries(lazyModules)) {
+          if (mod.tabs.includes(tab)) loadModule(name);
+        }
+      });
+      
+      // Pre-load on dashboard (most common landing tab)
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          loadModule('admin-import');
+          loadModule('admin-analytics');
+        }, 1500); // 1.5s after page load
+      });
+    })();
   </script>
-  <script defer src="script.js?v=2"></script>
-  <script defer src="admin-shared.js?v=1"></script>
-  <script defer src="admin-import.js?v=2"></script>
-  <script defer src="admin-analytics.js?v=1"></script>
-  <script defer src="admin-core.js?v=2"></script>
 
   <!-- ══════ MODAL CETAK NILAI ══════ -->
   <div id="cetak-modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);z-index:9000;align-items:center;justify-content:center;padding:20px;">

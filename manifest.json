@@ -1,0 +1,21 @@
+{
+  "name": "CBT Online - Ujian Berbasis Komputer",
+  "short_name": "CBT Online",
+  "description": "Aplikasi ujian berbasis komputer untuk siswa dengan mode offline",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#4f46e5",
+  "lang": "id",
+  "categories": ["education"],
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
