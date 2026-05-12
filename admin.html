@@ -765,16 +765,10 @@
   <script defer src="firebase-mock.min.js"></script>
   <!-- ✅ FIX: supabase-patch MUST load before admin-core (defer preserves order) -->
   <script defer src="supabase-patch.min.js?v=8"></script>
-  <!-- ✅ OPTIMIZATION: Load script.min.js LAZY (85KB) -->
-  <script>
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => window.ScriptLazyLoader.load(), 300);
-      });
-    } else {
-      setTimeout(() => window.ScriptLazyLoader.load(), 300);
-    }
-  </script>
+  <!-- ✅ CRITICAL: Load script.min.js BEFORE admin-core (admin-core depends on it) -->
+  <script defer src="script.min.js?v=2"></script>
+  <!-- [CACHE-SYNC] Load cache sync manager untuk real-time cache invalidation -->
+  <script defer src="cache-sync-manager.min.js?v=1"></script>
   <script defer src="admin-shared.min.js?v=1"></script>
   <script defer src="admin-core.min.js?v=2"></script>
 

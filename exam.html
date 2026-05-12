@@ -180,22 +180,15 @@
   <script src="bandwidth-optimizer.min.js?v=1" defer></script>
   <script src="css-lazy-loader.min.js?v=1" defer></script>
   <script src="image-optimizer.min.js?v=1" defer></script>
-  <script src="script-lazy-loader.min.js?v=1" defer></script>
   
   <script src="supabase-adapter.min.js?v=2" defer></script>
   <!-- ✅ Firebase mock (MUST load before supabase-patch.js) -->
   <script src="firebase-mock.min.js" defer></script>
   <script src="supabase-patch.min.js?v=8" defer></script>
-  <!-- ✅ OPTIMIZATION: Load script.min.js LAZY (85KB) -->
-  <script>
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => window.ScriptLazyLoader.load(), 300);
-      });
-    } else {
-      setTimeout(() => window.ScriptLazyLoader.load(), 300);
-    }
-  </script>
+  <!-- ✅ CRITICAL: Load script.min.js (exam-core depends on it) -->
+  <script src="script.min.js?v=10" defer></script>
+  <!-- [CACHE-SYNC] Load cache sync manager untuk real-time cache invalidation -->
+  <script src="cache-sync-manager.min.js?v=1" defer></script>
   <script src="exam-core.min.js?v=4" defer></script>
   <script src="mobile-sync-wrapper.min.js?v=1" defer></script>
 
