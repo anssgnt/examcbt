@@ -1,0 +1,35 @@
+/* Compact Schedule Layout - 2 columns */
+.mobile-schedule-list{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:12px!important}
+
+/* Reduce card padding and size */
+.mobile-schedule-card{padding:12px!important;gap:8px!important;flex-direction:column!important}
+
+/* Icon as background - larger and centered */
+.mobile-schedule-card::after{right:0!important;top:0!important;width:100%!important;height:100%!important;background-size:140px!important;background-position:center!important;opacity:0.06!important}
+
+/* Smaller illustration icon */
+.mobile-schedule-illustration{width:36px!important;height:36px!important;border-radius:10px!important;font-size:16px!important}
+
+/* Compact text styling */
+.mobile-schedule-details{min-width:0!important}
+
+.mobile-schedule-badge{font-size:8px!important;padding:2px 6px!important;margin-bottom:4px!important;border-radius:5px!important}
+
+.mobile-schedule-name{font-size:13px!important;margin-bottom:3px!important;line-height:1.2!important;word-break:break-word!important}
+
+.mobile-schedule-time{font-size:10px!important;margin-bottom:6px!important;gap:3px!important}
+
+/* Smaller button */
+.mobile-schedule-btn{padding:8px!important;border-radius:8px!important;font-size:11px!important;gap:4px!important;margin-top:0!important}
+
+.mobile-schedule-btn.view-result{margin-top:4px!important}
+
+/* Adjust card states */
+.mobile-schedule-card.active{box-shadow:0 10px 20px rgba(16,185,129,0.15)!important}
+.mobile-schedule-card.waiting{box-shadow:0 10px 20px rgba(245,158,11,0.15)!important}
+.mobile-schedule-card.sync{box-shadow:0 10px 20px rgba(99,102,241,0.15)!important}
+
+/* Responsive - back to single column on very small screens */
+@media (max-width:480px){
+  .mobile-schedule-list{grid-template-columns:1fr!important}
+}
